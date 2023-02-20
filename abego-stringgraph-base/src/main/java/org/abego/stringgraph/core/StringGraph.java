@@ -69,7 +69,7 @@ public interface StringGraph {
     /**
      * Returns the {@link Edges} according to the query given by the arguments.
      * <p>
-     * Each of the arguments defines a String required for the corresponding 
+     * Each of the arguments defines a String required for the corresponding
      * part of an edge (from, label, to) to be selected. When the argument is
      * {@code null} the selection is not restricted for this part.
      * <p>
@@ -89,14 +89,35 @@ public interface StringGraph {
 
     Properties getNodeProperties(String node);
 
+    default Properties getProperties(Node node) {
+        return getNodeProperties(node.id());
+    }
+
     boolean hasNodeProperty(String node, String propertyName);
+
+    default boolean hasProperty(Node node, String propertyName) {
+        return hasNodeProperty(node.id(), propertyName);
+    }
 
     Property getNodeProperty(String node, String propertyName);
 
+    default Property getProperty(Node node, String propertyName) {
+        return getNodeProperty(node.id(), propertyName);
+    }
+
     String getNodePropertyValue(String node, String propertyName);
+
+    default String getPropertyValue(Node node, String propertyName) {
+        return getNodePropertyValue(node.id(), propertyName);
+    }
 
     String getNodePropertyValueOrElse(
             String node, String propertyName, String defaultValue);
+
+    default String getPropertyValueOrElse(
+            Node node, String propertyName, String defaultValue) {
+        return getNodePropertyValueOrElse(node.id(), propertyName, defaultValue);
+    }
 
     Nodes fromNodes();
 

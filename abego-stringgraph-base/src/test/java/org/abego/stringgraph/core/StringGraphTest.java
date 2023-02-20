@@ -58,7 +58,7 @@ public class StringGraphTest {
                 IterableUtil.size(nodes) + "\n" +
                         IterableUtil.asSortedLines(nodes, Node::id));
     }
-    
+
     public static void assertStringsAsLinesEquals(
             String expectedStringsInLines, Iterable<String> strings) {
         assertEquals(expectedStringsInLines,
@@ -133,7 +133,7 @@ public class StringGraphTest {
 
     public static void assertEqualsToAllNodePropsOfSample1(StringGraph graph) {
         graph.nodes().forEach(node -> {
-            Properties props = graph.getNodeProperties(node.id());
+            Properties props = graph.getProperties(node);
             if (node.id().equals("a")) {
                 assertEquals(2, props.getSize());
                 assertEquals("", props.getValueOfProperty("prop1"));
@@ -199,7 +199,7 @@ public class StringGraphTest {
     }
 
     /**
-     * Returns a {@link StringGraph} with 6 Nodes (A - F) and 
+     * Returns a {@link StringGraph} with 6 Nodes (A - F) and
      * 5 edges with 3 different labels (e1 - e3).
      * <p>
      * Visually the graph looks like this:
@@ -208,11 +208,11 @@ public class StringGraphTest {
      *
      *        A ——— e1 ——→ B
      *          ⟍        ↗︎
-     *           e2    ⟋         
+     *           e2    ⟋
      *              ⟍⟋
      *             ⟋  ⟍
-     *           e3     ⟍ 
-     *         ⟋         ↘︎  
+     *           e3     ⟍
+     *         ⟋         ↘︎
      *        C ——— e2 ——→ D
      *
      *        E ——— e1 ——→ F
@@ -250,12 +250,12 @@ public class StringGraphTest {
                         "\"A\" -> \"B\" : \"e1\"\n" +
                         "\"E\" -> \"F\" : \"e1\"",
                 graph.edges(null, "e1", null));
-        
+
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
                         "\"A\" -> \"D\" : \"e2\"\n" +
                         "\"C\" -> \"D\" : \"e2\"",
                 graph.edges(null, null, "D"));
-        
+
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"C\" -> \"B\" : \"e3\"",
                 graph.edges("C", "e3", null));
@@ -594,10 +594,20 @@ public class StringGraphTest {
 
         // StringGraph
 
+        Node nodeA = graph.nodes("?", "c", "b")
+                .stream().findFirst().orElseThrow(IllegalStateException::new);
+        Node nodeB = graph.nodes("a", "c", "?")
+                .stream().findFirst().orElseThrow(IllegalStateException::new);
+
         // ... hasNodeProperty
         assertTrue(graph.hasNodeProperty("a", "prop1"));
         assertFalse(graph.hasNodeProperty("a", "missingProp"));
         assertFalse(graph.hasNodeProperty("b", "missingProp"));
+
+        // ... hasProperty
+        assertTrue(graph.hasProperty(nodeA, "prop1"));
+        assertFalse(graph.hasProperty(nodeA, "missingProp"));
+        assertFalse(graph.hasProperty(nodeB, "missingProp"));
 
         // ... getNodePropertyValue
         assertEquals("foo", graph.getNodePropertyValue("a", "prop1"));
@@ -606,15 +616,33 @@ public class StringGraphTest {
                 () -> graph.getNodePropertyValue("b", "prop1"));
         assertEquals("No such property: prop1", e.getMessage());
 
+        // ... getPropertyValue
+        assertEquals("foo", graph.getPropertyValue(nodeA, "prop1"));
+        assertEquals("bar", graph.getPropertyValue(nodeA, "prop2"));
+        e = assertThrows(StringGraphException.class,
+                () -> graph.getPropertyValue(nodeB, "prop1"));
+        assertEquals("No such property: prop1", e.getMessage());
+
         // ... getNodePropertyValue
         assertEquals("foo", graph.getNodePropertyValueOrElse("a", "prop1", "baz"));
         assertEquals("baz", graph.getNodePropertyValueOrElse("b", "prop1", "baz"));
+
+        // ... getPropertyValue
+        assertEquals("foo", graph.getPropertyValueOrElse(nodeA, "prop1", "baz"));
+        assertEquals("baz", graph.getPropertyValueOrElse(nodeB, "prop1", "baz"));
 
         // ... getNodeProperty
         Property prop1OfA = graph.getNodeProperty("a", "prop1");
         Property prop2OfA = graph.getNodeProperty("a", "prop2");
         e = assertThrows(StringGraphException.class,
                 () -> graph.getNodeProperty("b", "prop1"));
+        assertEquals("No such property: prop1", e.getMessage());
+
+        // ... getProperty
+        Property prop1OfA2 = graph.getProperty(nodeA, "prop1");
+        Property prop2OfA2 = graph.getProperty(nodeA, "prop2");
+        e = assertThrows(StringGraphException.class,
+                () -> graph.getProperty(nodeB, "prop1"));
         assertEquals("No such property: prop1", e.getMessage());
 
         // Property
@@ -624,12 +652,18 @@ public class StringGraphTest {
 
         // ... equals/hashCode
         assertNotEquals(prop1OfA, prop2OfA);
+        assertNotEquals(prop1OfA2, prop2OfA2);
         assertNotEquals(prop1OfA.hashCode(), prop2OfA.hashCode());
+        assertNotEquals(prop1OfA2.hashCode(), prop2OfA2.hashCode());
 
         // Properties
 
-        // ... getValueOfProperty
+        // ... getNodeProperties + getValueOfProperty
         Properties ps = graph.getNodeProperties("a");
+        assertEquals("foo", ps.getValueOfProperty("prop1"));
+        
+        // ... getProperties + getValueOfProperty
+        ps = graph.getProperties(nodeA);
         assertEquals("foo", ps.getValueOfProperty("prop1"));
 
         // ... iterator
