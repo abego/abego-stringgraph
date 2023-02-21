@@ -35,36 +35,36 @@ import static org.abego.stringgraph.core.StringGraphImpl.asNode;
 final class EdgeImpl implements Edge {
     private static final Comparator<Edge> COMPARATOR = EdgeUtil.getComparator();
     private final Node fromNode;
-    private final Node toNode;
     private final String label;
+    private final Node toNode;
 
-    private EdgeImpl(Node fromNode, Node toNode, String label) {
+    private EdgeImpl(Node fromNode, String label, Node toNode) {
         this.fromNode = fromNode;
-        this.toNode = toNode;
         this.label = label;
+        this.toNode = toNode;
     }
 
-    static Edge createEdge(Node fromNode, Node toNode, String label) {
-        return new EdgeImpl(fromNode, toNode, label);
+    static Edge createEdge(Node fromNode, String label, Node toNode) {
+        return new EdgeImpl(fromNode, label, toNode);
     }
     
-    static Edge createEdge(String fromNode, String toNode, String label) {
-        return new EdgeImpl(asNode(fromNode), asNode(toNode), label);
+    static Edge createEdge(String fromNode, String label, String toNode) {
+        return new EdgeImpl(asNode(fromNode), label, asNode(toNode));
     }
 
     @Override
     public Node getFromNode() {
         return fromNode;
     }
+    
+    @Override
+    public String getLabel() {
+        return label;
+    }
 
     @Override
     public Node getToNode() {
         return toNode;
-    }
-
-    @Override
-    public String getLabel() {
-        return label;
     }
 
     @Override
@@ -79,13 +79,13 @@ final class EdgeImpl implements Edge {
         EdgeImpl edge = (EdgeImpl) o;
         //noinspection CallToSuspiciousStringMethod
         return getFromNode().equals(edge.getFromNode())
-                && getToNode().equals(edge.getToNode())
-                && getLabel().equals(edge.getLabel());
+                && getLabel().equals(edge.getLabel())
+                && getToNode().equals(edge.getToNode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFromNode(), getToNode(), getLabel());
+        return Objects.hash(getFromNode(), getLabel(), getToNode());
     }
 
     @Override

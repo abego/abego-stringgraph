@@ -136,7 +136,7 @@ public interface StringGraph {
 
     EdgeLabels edgeLabelsToNode(String toNode);
 
-    Nodes nodesToNodeViaEdgeLabeled(String toNode, String edgeLabel);
+    Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode);
 
     Edges edgesWith(Predicate<Edge> edgePredicate);
 
@@ -146,5 +146,6 @@ public interface StringGraph {
 
     Edges edgesToNode(String toNode);
 
-    boolean hasEdge(String fromNode, String toNode, String edgeLabel);
+    boolean hasEdge(String fromNode, String edgeLabel, String toNode);
+
 }

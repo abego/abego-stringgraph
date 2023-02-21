@@ -249,8 +249,8 @@ class StringGraphStoreDefault implements StringGraphStore {
         for (int i = 0; i < n; i += 3) {
             graphConstructing.addEdge(
                     strings.getString(edgesIDs[i]),
-                    strings.getString(edgesIDs[i + 1]),
-                    strings.getString(edgesIDs[i + 2]));
+                    strings.getString(edgesIDs[i + 2]), strings.getString(edgesIDs[i + 1])
+            );
         }
     }
 

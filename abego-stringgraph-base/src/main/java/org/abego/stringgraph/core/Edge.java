@@ -27,9 +27,9 @@ package org.abego.stringgraph.core;
 public interface Edge extends Comparable<Edge> {
     Node getFromNode();
 
-    Node getToNode();
-
     String getLabel();
+
+    Node getToNode();
 
     String getText();
 }

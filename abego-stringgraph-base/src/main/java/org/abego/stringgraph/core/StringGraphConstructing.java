@@ -28,10 +28,10 @@ public interface StringGraphConstructing {
 
     void addNode(String node);
 
-    void addEdge(String fromNode, String toNode, String edgeLabel);
+    void addEdge(String fromNode, String edgeLabel, String toNode);
 
     default void addEdge(String fromNode, String toNode) {
-        addEdge(fromNode, toNode, "");
+        addEdge(fromNode, "", toNode);
     }
     
     void setNodeProperty(String node, String name, String value);

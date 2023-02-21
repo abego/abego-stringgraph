@@ -82,7 +82,7 @@ public class StringGraphTest {
 
     public static StringGraph getSingleEdgeGraph() {
         StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
-        builder.addEdge("from", "to", "label");
+        builder.addEdge("from", "label", "to");
         return builder.build();
     }
 
@@ -91,12 +91,12 @@ public class StringGraphTest {
         constructing.addNode("b");
         constructing.addNode("c"); // will later become a cycle
         constructing.addEdge("d", "e");
-        constructing.addEdge("f", "g", "h");
-        constructing.addEdge("i", "i", "cycle");
-        constructing.addEdge("c", "c", "cycle");
-        constructing.addEdge("o", "m1", "field");
-        constructing.addEdge("o", "m2", "field");
-        constructing.addEdge("o", "m3", "");
+        constructing.addEdge("f", "h", "g");
+        constructing.addEdge("i", "cycle", "i");
+        constructing.addEdge("c", "cycle", "c");
+        constructing.addEdge("o", "field", "m1");
+        constructing.addEdge("o", "field", "m2");
+        constructing.addEdge("o", "", "m3");
         constructing.setNodeProperty("a", "prop1", "");
         constructing.setNodeProperty("a", "prop2", "foo");
         return constructing;
@@ -153,8 +153,8 @@ public class StringGraphTest {
     @ParameterizedTest
     @MethodSource("stringGraphSample1Provider")
     void hasEdge(StringGraph sample1) {
-        assertTrue(sample1.hasEdge("o", "m1", "field"));
-        assertFalse(sample1.hasEdge("x", "y", "z"));
+        assertTrue(sample1.hasEdge("o", "field", "m1"));
+        assertFalse(sample1.hasEdge("x", "z", "y"));
     }
 
     @ParameterizedTest
@@ -221,11 +221,11 @@ public class StringGraphTest {
      */
     private static StringGraph getSampleABCDEF() {
         StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
-        builder.addEdge("A", "B", "e1");
-        builder.addEdge("A", "D", "e2");
-        builder.addEdge("C", "B", "e3");
-        builder.addEdge("C", "D", "e2");
-        builder.addEdge("E", "F", "e1");
+        builder.addEdge("A", "e1", "B");
+        builder.addEdge("A", "e2", "D");
+        builder.addEdge("C", "e3", "B");
+        builder.addEdge("C", "e2", "D");
+        builder.addEdge("E", "e1", "F");
         return builder.build();
     }
 
@@ -450,29 +450,29 @@ public class StringGraphTest {
     @MethodSource("stringGraphSample1Provider")
     void allNodesToNodeViaEdgeLabeled(StringGraph sample1) {
         // node without edges
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("a", ""));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("", "a"));
         // single node, empty label
         assertNodesAsLinesEquals("1\n" +
                         "d",
-                sample1.nodesToNodeViaEdgeLabeled("e", ""));
+                sample1.nodesViaEdgeLabeledToNode("", "e"));
         // single node, empty label, query wrong label
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("e", "x"));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("x", "e"));
         // single node, non-empty label
         assertNodesAsLinesEquals("1\n" +
                         "f",
-                sample1.nodesToNodeViaEdgeLabeled("g", "h"));
+                sample1.nodesViaEdgeLabeledToNode("h", "g"));
         // single node, non-empty label, query wrong label
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("g", "x"));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("x", "g"));
         // self cyclic
         assertNodesAsLinesEquals("1\n" +
                         "c",
-                sample1.nodesToNodeViaEdgeLabeled("c", "cycle"));
+                sample1.nodesViaEdgeLabeledToNode("cycle", "c"));
         // self cyclic, query wrong label
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("c", "x"));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("x", "c"));
         // fromNode that is no toNode
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("f", "h"));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("h", "f"));
         // missing node
-        assertNodesAsLinesEquals("0\n", sample1.nodesToNodeViaEdgeLabeled("x", ""));
+        assertNodesAsLinesEquals("0\n", sample1.nodesViaEdgeLabeledToNode("", "x"));
     }
 
     @ParameterizedTest
@@ -567,10 +567,10 @@ public class StringGraphTest {
     @ParameterizedTest
     @MethodSource("stringGraphBuilderProvider")
     void duplicateEdges(StringGraphBuilder builder) {
-        builder.addEdge("a", "b", "c");
-        builder.addEdge("d", "e", "f");
+        builder.addEdge("a", "c", "b");
+        builder.addEdge("d", "f", "e");
         // adding an edge that already exists will not change the graph
-        builder.addEdge("a", "b", "c");
+        builder.addEdge("a", "c", "b");
         StringGraph graph = builder.build();
 
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
@@ -581,7 +581,7 @@ public class StringGraphTest {
     @ParameterizedTest
     @MethodSource("stringGraphBuilderProvider")
     void props(StringGraphBuilder builder) {
-        builder.addEdge("a", "b", "c");
+        builder.addEdge("a", "c", "b");
 
         builder.setNodeProperty("a", "prop1", "foo");
         builder.setNodeProperty("a", "prop2", "bar");

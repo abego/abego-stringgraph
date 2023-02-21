@@ -39,16 +39,16 @@ class EdgeUtilTest {
 
     private static Edges createEdgesToSort() {
         HashSet<Edge> items = new HashSet<>();
-        items.add(EdgeImpl.createEdge("a", "b", "c"));
-        items.add(EdgeImpl.createEdge("", "b", "c"));
-        items.add(EdgeImpl.createEdge("a", "", "c"));
-        items.add(EdgeImpl.createEdge("a", "b", ""));
+        items.add(EdgeImpl.createEdge("a", "c", "b"));
+        items.add(EdgeImpl.createEdge("", "c", "b"));
+        items.add(EdgeImpl.createEdge("a", "c", ""));
+        items.add(EdgeImpl.createEdge("a", "", "b"));
         items.add(EdgeImpl.createEdge("a", "b", "b"));
-        items.add(EdgeImpl.createEdge("a", "b", "a"));
+        items.add(EdgeImpl.createEdge("a", "a", "b"));
         items.add(EdgeImpl.createEdge("a", "a", "a"));
-        items.add(EdgeImpl.createEdge("b", "a", ""));
-        items.add(EdgeImpl.createEdge("b", "b", ""));
-        items.add(EdgeImpl.createEdge("b", "b", "c"));
+        items.add(EdgeImpl.createEdge("b", "", "a"));
+        items.add(EdgeImpl.createEdge("b", "", "b"));
+        items.add(EdgeImpl.createEdge("b", "c", "b"));
         return EdgesImpl.createEdges(items);
     }
 

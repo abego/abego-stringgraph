@@ -137,7 +137,7 @@ class StringGraphImpl implements StringGraph {
             case 1 + 3 * 2 + 9 * 0: // "ABC", null, "?"
                 return nodesFromNode(fromPattern);
             case 0 + 3 * 1 + 9 * 1: // "?", "lab", "ABC"
-                return nodesToNodeViaEdgeLabeled(toPattern, labelPattern);
+                return nodesViaEdgeLabeledToNode(labelPattern, toPattern);
             case 1 + 3 * 1 + 9 * 0: // "ABC", "lab", "?"
                 return nodesFromNodeViaEdgeLabeled(fromPattern, labelPattern);
             case 0 + 3 * 1 + 9 * 2: // "?", "lab", null
@@ -196,7 +196,7 @@ class StringGraphImpl implements StringGraph {
         
         if (edgesByPart.size() == 3) {
             // all parts restricted -> exactly one edge can be selected, if it exists
-            Edge candidate = edgeFactory.newEdge(from, to, label);
+            Edge candidate = edgeFactory.newEdge(from, label, to);
             return edges.contains(candidate) 
                     ? EdgesImpl.createEdges(candidate) : EdgesImpl.emptyEdges();
         }
@@ -284,7 +284,7 @@ class StringGraphImpl implements StringGraph {
     }
 
     @Override
-    public Nodes nodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
+    public Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode) {
         return NodesImpl.createNodes(
                 edgesIndexForToNode.edges(asNode(toNode)).stream()
                         .filter(e -> e.getLabel().equals(edgeLabel))
@@ -313,8 +313,8 @@ class StringGraphImpl implements StringGraph {
     }
 
     @Override
-    public boolean hasEdge(String fromNode, String toNode, String edgeLabel) {
-        return edges.contains(edgeFactory.newEdge(fromNode, toNode, edgeLabel));
+    public boolean hasEdge(String fromNode, String edgeLabel, String toNode) {
+        return edges.contains(edgeFactory.newEdge(fromNode, edgeLabel, toNode));
     }
 
     @Override

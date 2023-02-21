@@ -46,7 +46,7 @@ class StringGraphBuilderTest {
 
         builder.addNode("a");
         builder.addEdge("b", "c");
-        builder.addEdge("d", "e", "f");
+        builder.addEdge("d", "f", "e");
         StringGraph graph = builder.build();
 
         assertNotNull(graph);

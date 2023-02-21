@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class EdgeDefaultTest {
 
     public static Edge getEdgeSample() {
-        return EdgeImpl.createEdge("f", "t", "lbl");
+        return EdgeImpl.createEdge("f", "lbl", "t");
     }
 
     /**
@@ -84,8 +84,8 @@ class EdgeDefaultTest {
     @Test
     void testEquals() {
         Edge edge = getEdgeSample();
-        Edge edgeDuplicate = EdgeImpl.createEdge("f", "t", "lbl");
-        Edge otherEdge = EdgeImpl.createEdge("x", "y", "z");
+        Edge edgeDuplicate = EdgeImpl.createEdge("f", "lbl", "t");
+        Edge otherEdge = EdgeImpl.createEdge("x", "z", "y");
 
         assertEquals(edge, edge);
         assertEquals(edge, edgeDuplicate);

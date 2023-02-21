@@ -61,10 +61,10 @@ final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
     }
 
     @Override
-    public void addEdge(String fromNode, String toNode, String edgeLabel) {
+    public void addEdge(String fromNode, String edgeLabel, String toNode) {
         addNode(fromNode);
         addNode(toNode);
-        edges.add(newEdge(fromNode, toNode, edgeLabel));
+        edges.add(newEdge(fromNode, edgeLabel, toNode));
     }
 
     @Override
@@ -87,8 +87,8 @@ final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
     }
 
     @Override
-    public Edge newEdge(String fromNode, String toNode, String edgeLabel) {
-        return EdgeImpl.createEdge(asNode(fromNode), asNode(toNode), edgeLabel);
+    public Edge newEdge(String fromNode, String edgeLabel, String toNode) {
+        return EdgeImpl.createEdge(asNode(fromNode), edgeLabel, asNode(toNode));
     }
 
 }
