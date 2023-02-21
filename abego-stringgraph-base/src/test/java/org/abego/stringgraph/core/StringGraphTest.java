@@ -32,6 +32,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
+import static org.abego.stringgraph.core.EdgeDefaultTest.assertEdgesEqualsIgnoreOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -120,7 +121,7 @@ public class StringGraphTest {
     }
 
     public static void assertEqualsToAllEdgesOfSample1(Edges edges) {
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("7\n" +
+        assertEdgesEqualsIgnoreOrder("7\n" +
                         "c --cycle--> c\n" +
                         "d --> e\n" +
                         "f --h--> g\n" +
@@ -233,7 +234,7 @@ public class StringGraphTest {
     void edgesWithPattern() {
         StringGraph graph = getSampleABCDEF();
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("5\n" +
+        assertEdgesEqualsIgnoreOrder("5\n" +
                         "A --e1--> B\n" +
                         "A --e2--> D\n" +
                         "C --e2--> D\n" +
@@ -241,30 +242,30 @@ public class StringGraphTest {
                         "E --e1--> F",
                 graph.edges(null, null, null));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                         "A --e1--> B\n" +
                         "A --e2--> D",
                 graph.edges("A", null, null));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                         "A --e1--> B\n" +
                         "E --e1--> F",
                 graph.edges(null, "e1", null));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                         "A --e2--> D\n" +
                         "C --e2--> D",
                 graph.edges(null, null, "D"));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "C --e3--> B",
                 graph.edges("C", "e3", null));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "A --e2--> D",
                 graph.edges("A", "e2", "D"));
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 graph.edges("X", "e2", "D"));
     }
 
@@ -478,65 +479,65 @@ public class StringGraphTest {
     @ParameterizedTest
     @MethodSource("stringGraphSample1Provider")
     void allEdgesWith(StringGraph sample1) {
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
+        assertEdgesEqualsIgnoreOrder("3\n" +
                         "o --> m3\n" +
                         "o --field--> m1\n" +
                         "o --field--> m2",
                 sample1.edgesWith(e -> e.getToNode().id().startsWith("m")));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "f --h--> g",
                 sample1.edgesWith(e -> e.getLabel().equals("h")));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesWith(e -> false));
     }
 
     @ParameterizedTest
     @MethodSource("stringGraphSample1Provider")
     void allEdgesLabeled(StringGraph sample1) {
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                         "d --> e\n" +
                         "o --> m3",
                 sample1.edgesLabeled(""));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                         "c --cycle--> c\n" +
                         "i --cycle--> i",
                 sample1.edgesLabeled("cycle"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesLabeled("x"));
     }
 
     @ParameterizedTest
     @MethodSource("stringGraphSample1Provider")
     void allEdgesFromNode(StringGraph sample1) {
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesFromNode("a"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "c --cycle--> c",
                 sample1.edgesFromNode("c"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "d --> e",
                 sample1.edgesFromNode("d"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
+        assertEdgesEqualsIgnoreOrder("3\n" +
                         "o --> m3\n" +
                         "o --field--> m1\n" +
                         "o --field--> m2",
                 sample1.edgesFromNode("o"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesFromNode("x"));
     }
 
     @ParameterizedTest
     @MethodSource("stringGraphSample1Provider")
     void allEdgesToNode(StringGraph sample1) {
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesToNode("a"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "c --cycle--> c",
                 sample1.edgesToNode("c"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
+        assertEdgesEqualsIgnoreOrder("1\n" +
                         "d --> e",
                 sample1.edgesToNode("e"));
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
+        assertEdgesEqualsIgnoreOrder("0\n",
                 sample1.edgesFromNode("x"));
     }
 
@@ -573,7 +574,7 @@ public class StringGraphTest {
         builder.addEdge("a", "c", "b");
         StringGraph graph = builder.build();
 
-        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+        assertEdgesEqualsIgnoreOrder("2\n" +
                 "a --c--> b\n" +
                 "d --f--> e", graph.edges());
     }
@@ -661,7 +662,7 @@ public class StringGraphTest {
         // ... getNodeProperties + getValueOfProperty
         Properties ps = graph.getNodeProperties("a");
         assertEquals("foo", ps.getValueOfProperty("prop1"));
-        
+
         // ... getProperties + getValueOfProperty
         ps = graph.getProperties(nodeA);
         assertEquals("foo", ps.getValueOfProperty("prop1"));
@@ -680,5 +681,54 @@ public class StringGraphTest {
                 graph.getNodeProperties("noNode").iterator().next());
     }
 
+    @Test
+    void accessWithNodeInstances() {
+        StringGraph graph = getSampleABCDEF();
 
+        Node nodeA = graph.nodes("?", "e1", "B")
+                .stream().findFirst().orElseThrow(IllegalStateException::new);
+        Node nodeB = graph.nodes("A", "e1", "?")
+                .stream().findFirst().orElseThrow(IllegalStateException::new);
+
+        assertNodesAsLinesEquals("2\n" +
+                        "B\n" +
+                        "D",
+                graph.nodesFrom(nodeA));
+
+        assertNodesAsLinesEquals("1\n" +
+                        "B",
+                graph.nodesFromNodeViaEdgeLabeled(nodeA, "e1"));
+
+        assertNodesAsLinesEquals("2\n" +
+                        "A\n" +
+                        "C",
+                graph.nodesTo(nodeB));
+
+        assertStringsAsLinesEquals("2\n" +
+                        "e1\n" +
+                        "e2",
+                graph.edgeLabelsFrom(nodeA));
+
+        assertStringsAsLinesEquals("2\n" +
+                        "e1\n" +
+                        "e3",
+                graph.edgeLabelsTo(nodeB));
+
+        assertNodesAsLinesEquals("1\n" +
+                        "A",
+                graph.nodesViaEdgeLabeledTo("e1", nodeB));
+
+        assertEdgesEqualsIgnoreOrder("2\n" +
+                        "A --e1--> B\n" +
+                        "A --e2--> D",
+                graph.edgesFrom(nodeA));
+
+        assertEdgesEqualsIgnoreOrder("2\n" +
+                        "A --e1--> B\n" +
+                        "C --e3--> B",
+                graph.edgesTo(nodeB));
+
+        assertTrue(graph.hasEdge(nodeA, "e1", nodeB));
+        assertFalse(graph.hasEdge(nodeA, "ex", nodeB));
+    }
 }

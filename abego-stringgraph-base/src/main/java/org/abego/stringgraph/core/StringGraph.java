@@ -127,16 +127,39 @@ public interface StringGraph {
 
     Nodes nodesFromNode(String fromNode);
 
+    default Nodes nodesFrom(Node node) {
+        return nodesFromNode(node.id());
+    }
+
     EdgeLabels edgeLabelsFromNode(String fromNode);
 
-    Nodes nodesFromNodeViaEdgeLabeled(
-            String fromNode, String edgeLabel);
+    default EdgeLabels edgeLabelsFrom(Node node) {
+        return edgeLabelsFromNode(node.id());
+    }
+
+    Nodes nodesFromNodeViaEdgeLabeled(String fromNode, String edgeLabel);
+
+    default Nodes nodesFromNodeViaEdgeLabeled(Node node, String edgeLabel) {
+        return nodesFromNodeViaEdgeLabeled(node.id(), edgeLabel);
+    }
 
     Nodes nodesToNode(String toNode);
 
+    default Nodes nodesTo(Node node) {
+        return nodesToNode(node.id());
+    }
+
     EdgeLabels edgeLabelsToNode(String toNode);
 
+    default EdgeLabels edgeLabelsTo(Node node) {
+        return edgeLabelsToNode(node.id());
+    }
+
     Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode);
+
+    default Nodes nodesViaEdgeLabeledTo(String edgeLabel, Node node) {
+        return nodesViaEdgeLabeledToNode(edgeLabel, node.id());
+    }
 
     Edges edgesWith(Predicate<Edge> edgePredicate);
 
@@ -144,8 +167,20 @@ public interface StringGraph {
 
     Edges edgesFromNode(String fromNode);
 
+    default Edges edgesFrom(Node node) {
+        return edgesFromNode(node.id());
+    }
+
     Edges edgesToNode(String toNode);
 
+    default Edges edgesTo(Node node) {
+        return edgesToNode(node.id());
+    }
+
     boolean hasEdge(String fromNode, String edgeLabel, String toNode);
+
+    default boolean hasEdge(Node fromNode, String edgeLabel, Node toNode) {
+        return hasEdge(fromNode.id(), edgeLabel, toNode.id());
+    }
 
 }
