@@ -61,7 +61,7 @@ class EdgeUtilTest {
     void edgeText() {
         String edgeText = EdgeUtil.calcEdgeText(getEdgeSample());
 
-        assertEquals("\"f\" -> \"t\" : \"lbl\"", edgeText);
+        assertEquals("f --lbl--> t", edgeText);
     }
 
     @Test
@@ -75,16 +75,16 @@ class EdgeUtilTest {
 
         // the default sort order is (fromNode, label, toLabel)
         assertEquals("10\n" +
-                        "\"\" -> \"b\" : \"c\"\n" +
-                        "\"a\" -> \"b\"\n" +
-                        "\"a\" -> \"a\" : \"a\"\n" +
-                        "\"a\" -> \"b\" : \"a\"\n" +
-                        "\"a\" -> \"b\" : \"b\"\n" +
-                        "\"a\" -> \"\" : \"c\"\n" +
-                        "\"a\" -> \"b\" : \"c\"\n" +
-                        "\"b\" -> \"a\"\n" +
-                        "\"b\" -> \"b\"\n" +
-                        "\"b\" -> \"b\" : \"c\"",
+                        "\"\" --c--> b\n" +
+                        "a --> b\n" +
+                        "a --a--> a\n" +
+                        "a --a--> b\n" +
+                        "a --b--> b\n" +
+                        "a --c--> \"\"\n" +
+                        "a --c--> b\n" +
+                        "b --> a\n" +
+                        "b --> b\n" +
+                        "b --c--> b",
                 actualText);
     }
 
@@ -99,15 +99,15 @@ class EdgeUtilTest {
 
         // the sort order is (fromNode, toLabel, label)
         assertEquals("10\n" +
-                "\"\" -> \"b\" : \"c\"\n" +
-                "\"a\" -> \"\" : \"c\"\n" +
-                "\"a\" -> \"a\" : \"a\"\n" +
-                "\"a\" -> \"b\"\n" +
-                "\"a\" -> \"b\" : \"a\"\n" +
-                "\"a\" -> \"b\" : \"b\"\n" +
-                "\"a\" -> \"b\" : \"c\"\n" +
-                "\"b\" -> \"a\"\n" +
-                "\"b\" -> \"b\"\n" +
-                "\"b\" -> \"b\" : \"c\"", actualText);
+                "\"\" --c--> b\n" +
+                "a --c--> \"\"\n" +
+                "a --a--> a\n" +
+                "a --> b\n" +
+                "a --a--> b\n" +
+                "a --b--> b\n" +
+                "a --c--> b\n" +
+                "b --> a\n" +
+                "b --> b\n" +
+                "b --c--> b", actualText);
     }
 }

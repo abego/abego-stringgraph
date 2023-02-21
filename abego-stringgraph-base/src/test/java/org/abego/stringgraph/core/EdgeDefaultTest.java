@@ -78,7 +78,7 @@ class EdgeDefaultTest {
     void getText() {
         Edge edge = getEdgeSample();
 
-        assertEquals("\"f\" -> \"t\" : \"lbl\"", edge.getText());
+        assertEquals("f --lbl--> t", edge.getText());
     }
 
     @Test

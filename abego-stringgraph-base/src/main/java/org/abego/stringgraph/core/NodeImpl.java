@@ -20,6 +20,10 @@ class NodeImpl implements Node {
         return id;
     }
 
+    @Override
+    public String getText() {
+        return Util.quotedIfNeeded(id());
+    }
 
     @Override
     public int compareTo(Node o) {
@@ -45,4 +49,5 @@ class NodeImpl implements Node {
                 "id='" + id + '\'' +
                 '}';
     }
+    
 }

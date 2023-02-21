@@ -24,10 +24,11 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.StringUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.util.Comparator;
+
+import static org.abego.stringgraph.core.Util.quotedIfNeeded;
 
 final class EdgeUtil {
     private static final Comparator<Edge> COMPARATOR = createComparator();
@@ -54,17 +55,22 @@ final class EdgeUtil {
 
     public static String calcEdgeText(Edge edge) {
         StringBuilder sb = new StringBuilder();
-        sb.append(StringUtil.quoted2(edge.getFromNode().id()));
-        sb.append(" -> ");
-        sb.append(StringUtil.quoted2(edge.getToNode().id()));
+        sb.append(edge.getFromNode().getText());
+        
         String label = edge.getLabel();
         if (!label.isEmpty()) {
-            sb.append(" : ");
-            sb.append(StringUtil.quoted2(label));
+            sb.append(" --");
+            sb.append(quotedIfNeeded(label));
+            sb.append("--> ");
+        } else {
+            sb.append(" --> ");
         }
+        
+        sb.append(edge.getToNode().getText());
+
         return sb.toString();
     }
-
+    
     private static Comparator<Edge> createComparator() {
         return Comparator
                 .comparing(Edge::getFromNode)
