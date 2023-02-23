@@ -16,7 +16,7 @@ class DOTDigraphPrinterTest {
 
         DOTDigraphs.getDOTDigraphPrinter().printDOTDigraph(stream, graph);
 
-        assertEquals("" +
+		assertEqualLines("" +
                         "digraph \"\" {\n" +
                         "    \"from\" -> \"to\" [label=label];\n" +
                         "}\n",
@@ -30,7 +30,7 @@ class DOTDigraphPrinterTest {
 
         DOTDigraphs.getDOTDigraphPrinter().printDOTDigraph(stream, graph, "name");
 
-        assertEquals("" +
+		assertEqualLines("" +
                         "digraph \"name\" {\n" +
                         "    \"from\" -> \"to\" [label=label];\n" +
                         "}\n",
@@ -55,7 +55,7 @@ class DOTDigraphPrinterTest {
             }
         });
 
-        assertEquals("" +
+		assertEqualLines("" +
                         "digraph \"myName\" {\n" +
                         "    \"c\" -> \"c\" [label=cycle];\n" +
                         "    \"d\" -> \"e\";\n" +
@@ -68,4 +68,13 @@ class DOTDigraphPrinterTest {
                 stream.toString());
     }
 
+	/**
+	 * Asserts the actual String has the same lines as the expected String (even
+	 * though the action line separators may differ).
+	 */
+	private static void assertEqualLines(String expected, String actual) {
+		String e = expected.replaceAll("\r","");
+		String a = actual.replaceAll("\r","");
+		assertEquals(e,a);
+	}
 }

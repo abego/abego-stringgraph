@@ -29,6 +29,8 @@ import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphException;
 import org.abego.stringgraph.core.StringGraphTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -118,6 +120,7 @@ class StringGraphStoreDefaultTest {
     }
 
     @Test
+	@DisabledOnOs(OS.WINDOWS)  // Windows cannot delete tempDir because file is in use
     void readEmptyFile(@TempDir File tempDir) {
         File file = new File(tempDir, "empty");
         FileUtil.ensureFileExists(file);
@@ -129,6 +132,7 @@ class StringGraphStoreDefaultTest {
     }
 
     @Test
+	@DisabledOnOs(OS.WINDOWS)  // Windows cannot delete tempDir because file is in use
     void readFileWithWrongDataFormatName(@TempDir File tempDir) throws IOException {
         File file = new File(tempDir, "some.graph");
         ObjectOutputStream objectOutputStream =
@@ -143,6 +147,7 @@ class StringGraphStoreDefaultTest {
     }
 
     @Test
+	@DisabledOnOs(OS.WINDOWS)  // Windows cannot delete tempDir because file is in use
     void readFileWithWrongDataFormatVersion(@TempDir File tempDir) throws IOException {
         File file = new File(tempDir, "some.graph");
         ObjectOutputStream objectOutputStream =
