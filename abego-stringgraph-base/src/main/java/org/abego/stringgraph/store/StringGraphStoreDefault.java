@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.store;
 
+import org.abego.commons.io.FileUtil;
 import org.abego.commons.stringpool.StringPool;
 import org.abego.commons.stringpool.StringPoolBuilder;
 import org.abego.commons.stringpool.StringPools;
@@ -77,6 +78,8 @@ class StringGraphStoreDefault implements StringGraphStore {
     public void writeStringGraph(StringGraph stringGraph) {
         try {
             File file = new File(uri);
+			FileUtil.ensureDirectoryExists(file.getParentFile());
+
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(Files.newOutputStream(file.toPath()));
 
@@ -98,7 +101,9 @@ class StringGraphStoreDefault implements StringGraphStore {
 
             objectInputStream.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new StringGraphStoreException(
+					String.format("Error when writing graph to %s: %s", //NON-NLS
+							uri, e.getMessage()), e);
         }
     }
 
@@ -292,12 +297,12 @@ class StringGraphStoreDefault implements StringGraphStore {
         writeInt(objectOutputStream, calcCountOfNodesWithProps(stringGraph));
         Nodes allNodes = stringGraph.nodes();
         for (Node node : allNodes) {
-            Properties props = stringGraph.getNodeProperties(node.id());
-            int n = props.getSize();
+            Properties properties = stringGraph.getNodeProperties(node.id());
+            int n = properties.getSize();
             if (n > 0) {
                 writeString(objectOutputStream, node.id());
                 writeInt(objectOutputStream, n);
-                for (Property p : props) {
+                for (Property p : properties) {
                     writeString(objectOutputStream, p.getName());
                     writeString(objectOutputStream, p.getValue());
                 }
