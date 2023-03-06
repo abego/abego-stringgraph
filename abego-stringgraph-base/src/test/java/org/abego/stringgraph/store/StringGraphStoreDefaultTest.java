@@ -82,7 +82,7 @@ class StringGraphStoreDefaultTest {
         assertEquals("Error when reading VLQ 'int'", ex.getMessage());
         ex =
                 assertThrows(StringGraphStoreException.class,
-                        () -> store.readStringGraph(stream,null));
+                        () -> store.readStringGraphFromStream(stream,null));
         assertEquals("Error when reading data format name", ex.getMessage());
     }
 
@@ -143,7 +143,8 @@ class StringGraphStoreDefaultTest {
         StringGraphException e = assertThrows(StringGraphException.class,
                 () -> StringGraphStoreDefault.createStringGraphStoreDefault(file.toURI())
                         .readStringGraph());
-        assertEquals("Invalid file format. Expected header 'org.abego.stringgraph.store.StringGraphStoreDefault', got 'wrong header'", e.getMessage());
+        assertTrue(e.getMessage().startsWith("Error when reading graph from "));
+        assertTrue(e.getMessage().endsWith("Invalid file format. Expected header 'org.abego.stringgraph.store.StringGraphStoreDefault', got 'wrong header'"));
     }
 
     @Test
@@ -160,7 +161,8 @@ class StringGraphStoreDefaultTest {
         StringGraphException e = assertThrows(StringGraphException.class,
                 () -> StringGraphStoreDefault.createStringGraphStoreDefault(file.toURI())
                         .readStringGraph());
-        assertEquals("Incompatible data format version. Expected '1', got '2'", e.getMessage());
+        assertTrue(e.getMessage().startsWith("Error when reading graph from "));
+        assertTrue(e.getMessage().endsWith("Incompatible data format version. Expected '1', got '2'"));
     }
 
     @Test

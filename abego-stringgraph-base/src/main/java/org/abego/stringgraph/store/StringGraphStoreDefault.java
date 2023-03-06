@@ -38,11 +38,9 @@ import org.abego.stringgraph.core.Property;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphBuilder;
 import org.abego.stringgraph.core.StringGraphConstructing;
-import org.abego.stringgraph.core.StringGraphException;
 import org.abego.stringgraph.core.StringGraphs;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
@@ -76,15 +74,13 @@ class StringGraphStoreDefault implements StringGraphStore {
     //region StringGraphStore API
     @Override
     public void writeStringGraph(StringGraph stringGraph) {
-        try {
-            File file = new File(uri);
-			FileUtil.ensureDirectoryExists(file.getParentFile());
+        File file = new File(uri);
+        FileUtil.ensureDirectoryExists(file.getParentFile());
+        try (ObjectOutputStream objectOutputStream =
+                     new ObjectOutputStream(Files.newOutputStream(file.toPath()))) {
 
-            ObjectOutputStream objectOutputStream =
-                    new ObjectOutputStream(Files.newOutputStream(file.toPath()));
+            writeGraphToStream(objectOutputStream, stringGraph);
 
-            writeGraph(objectOutputStream, stringGraph);
-            objectOutputStream.close();
         } catch (Exception e) {
             throw new StringGraphStoreException(
                     String.format("Error when writing graph to %s: %s", //NON-NLS
@@ -94,33 +90,24 @@ class StringGraphStoreDefault implements StringGraphStore {
 
     @Override
     public void readStringGraph(StringGraphConstructing graphConstructing) {
-        try {
-            ObjectInputStream objectInputStream =
-                    new ObjectInputStream(uri.toURL().openStream());
-            readStringGraph(objectInputStream, graphConstructing);
+        try (ObjectInputStream objectInputStream =
+                     new ObjectInputStream(uri.toURL().openStream())) {
 
-            objectInputStream.close();
-        } catch (IOException e) {
+            readStringGraphFromStream(objectInputStream, graphConstructing);
+        } catch (Exception e) {
             throw new StringGraphStoreException(
-					String.format("Error when writing graph to %s: %s", //NON-NLS
-							uri, e.getMessage()), e);
+                    String.format("Error when reading graph from %s: %s", //NON-NLS
+                            uri, e.getMessage()), e);
         }
     }
 
     @Override
     public StringGraph readStringGraph() {
         StringGraphBuilder graphBuilder = StringGraphs.createStringGraphBuilder();
-        try {
-            readStringGraph(graphBuilder);
 
-            return graphBuilder.build();
-        } catch (StringGraphException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new StringGraphStoreException(
-                    String.format("Error when reading graph from %s: %s", //NON-NLS
-                            uri, e.getMessage()), e);
-        }
+        readStringGraph(graphBuilder);
+
+        return graphBuilder.build();
     }
     //endregion
 
@@ -146,7 +133,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     private static final String END_TAG = "end"; //NON-NLS
 
     // package-private, not private, for white-box tests
-    void writeGraph(ObjectOutputStream objectOutputStream, StringGraph stringGraph) {
+    void writeGraphToStream(ObjectOutputStream objectOutputStream, StringGraph stringGraph) {
         StringGraphStoreUtil.writeDataFormat(
                 objectOutputStream, getDataFormatName(), DATA_FORMAT_VERSION);
         writeTag(objectOutputStream, EDGES_TAG);
@@ -160,7 +147,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     }
 
     // package-private, not private, for white-box tests
-    void readStringGraph(
+    void readStringGraphFromStream(
             ObjectInputStream objectInputStream,
             StringGraphConstructing graphConstructing) {
         StringGraphStoreUtil.readAndCheckDataFormat(
@@ -328,7 +315,6 @@ class StringGraphStoreDefault implements StringGraphStore {
     //endregion
 
 
-
     //region Primitive IO Operations
 
     // package-private, not private, for white-box tests
@@ -344,7 +330,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     int readInt(ObjectInputStream objectInputStream) {
         return readVLQInt(objectInputStream);
     }
-    
+
     private static byte[] readBytes(ObjectInputStream objectInputStream, int len) {
         try {
             byte[] bytes = new byte[len];
