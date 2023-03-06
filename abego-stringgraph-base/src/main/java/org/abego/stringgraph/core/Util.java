@@ -1,13 +1,12 @@
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.StringUtil;
-import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.stringgraph.internal.StringUtil;
 
 import java.util.regex.Pattern;
 
 final class Util {
     Util() {
-        throw new MustNotInstantiateException();
+        throw new UnsupportedOperationException();
     }
 
     static String quotedIfNeeded(String s) {

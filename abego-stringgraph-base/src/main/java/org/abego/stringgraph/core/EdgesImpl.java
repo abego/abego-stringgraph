@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
-import static org.abego.commons.util.SetUtil.asSet;
+import static org.abego.stringgraph.internal.SetUtil.asSet;
 
 final class EdgesImpl implements Edges {
     private static final Edges EMPTY_EDGES = new EdgesImpl(emptySet());

@@ -1,6 +1,5 @@
 package org.abego.stringgraph.dotdigraph;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DOTDigraphsTest {
     @Test
     void constructor() {
-        assertThrows(MustNotInstantiateException.class,DOTDigraphs::new);
+        assertThrows(UnsupportedOperationException.class,DOTDigraphs::new);
     }
 
 

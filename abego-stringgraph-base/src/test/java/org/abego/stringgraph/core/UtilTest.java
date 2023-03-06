@@ -1,6 +1,5 @@
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +8,7 @@ class UtilTest {
 
     @Test
     void constructor() {
-        assertThrows(MustNotInstantiateException.class,Util::new);
+        assertThrows(UnsupportedOperationException.class, Util::new);
     }
     
     @Test

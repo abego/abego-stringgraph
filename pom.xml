@@ -24,9 +24,8 @@
         <m2e.jdt.annotationpath>/abego-commons/ide/eclipse/eea</m2e.jdt.annotationpath>
 
         <abego-stringgraph-base.version>${project.version}</abego-stringgraph-base.version>
-        <abego-stringgraph-cli.version>${project.version}</abego-stringgraph-cli.version>
 
-        <abego-commons-base.version>0.12.0-SNAPSHOT</abego-commons-base.version>
+        <abego-stringpool.version>0.1.0</abego-stringpool.version>
         <commons-cli.version>1.4</commons-cli.version>
         <junit-jupiter.version>5.5.2</junit-jupiter.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>

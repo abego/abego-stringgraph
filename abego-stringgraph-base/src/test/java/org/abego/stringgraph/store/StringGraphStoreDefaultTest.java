@@ -24,10 +24,10 @@
 
 package org.abego.stringgraph.store;
 
-import org.abego.commons.io.FileUtil;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphException;
 import org.abego.stringgraph.core.StringGraphTest;
+import org.abego.stringgraph.internal.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;

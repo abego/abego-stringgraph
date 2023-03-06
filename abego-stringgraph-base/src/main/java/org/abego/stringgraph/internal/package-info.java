@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,39 +22,13 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+/**
+ * The "internal" package of the module, not intended to be access directly
+ * by client code.
+ * <p>
+ * Stuff inside this package may change any time without prior notice.
+ **/
+@NonNullByDefault
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.store.StringGraphStore;
-import org.abego.stringgraph.store.StringGraphStores;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.io.File;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-class StringGraphsTest {
-    @Test
-    void constructor() {
-        assertThrows(UnsupportedOperationException.class, StringGraphs::new);
-    }
-
-
-    @Test
-    void createStringGraphBuilder() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
-
-        assertNotNull(builder);
-    }
-
-    @Test
-    void getStringGraphStore(@TempDir File tempDir) {
-        File file = new File(tempDir, "sample.graph");
-
-        StringGraphStore store = StringGraphStores.getStringGraphStore(file.toURI());
-
-        assertNotNull(store);
-    }
-
-}
+import org.eclipse.jdt.annotation.NonNullByDefault;

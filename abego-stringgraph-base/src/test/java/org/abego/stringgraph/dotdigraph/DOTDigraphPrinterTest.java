@@ -1,6 +1,5 @@
 package org.abego.stringgraph.dotdigraph;
 
-import org.abego.commons.io.PrintStreamToBuffer;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphTest;
 import org.junit.jupiter.api.Test;

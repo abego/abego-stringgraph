@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,14 +22,24 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-public final class StringGraphs {
-    StringGraphs() {
-        throw new UnsupportedOperationException();
+import java.util.HashSet;
+import java.util.Set;
+
+// Original: https://github.com/abego/commons
+public final class SetUtil {
+    private SetUtil() {
     }
-    
-    public static StringGraphBuilder createStringGraphBuilder() {
-        return StringGraphBuilderImpl.createStringGraphBuilder();
+
+    @SafeVarargs
+    public static <T> Set<T> asSet(T... items) {
+        Set<T> result = new HashSet<>(items.length);
+        //noinspection ManualArrayToCollectionCopy
+        for (T e : items) {
+            //noinspection UseBulkOperation
+            result.add(e);
+        }
+        return result;
     }
- }
+}

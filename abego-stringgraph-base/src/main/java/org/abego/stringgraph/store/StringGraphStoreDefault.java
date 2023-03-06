@@ -24,11 +24,11 @@
 
 package org.abego.stringgraph.store;
 
-import org.abego.commons.io.FileUtil;
-import org.abego.commons.stringpool.StringPool;
-import org.abego.commons.stringpool.StringPoolBuilder;
-import org.abego.commons.stringpool.StringPools;
-import org.abego.commons.vlq.VLQUtil;
+import org.abego.stringgraph.internal.FileUtil;
+import org.abego.stringgraph.internal.VLQUtil;
+import org.abego.stringpool.StringPool;
+import org.abego.stringpool.StringPoolBuilder;
+import org.abego.stringpool.StringPools;
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
 import org.abego.stringgraph.core.Node;

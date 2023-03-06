@@ -1,8 +1,8 @@
 package org.abego.stringgraph.dotdigraph;
 
-import org.abego.commons.lang.StringUtil;
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.StringGraph;
+import org.abego.stringgraph.internal.StringUtil;
 
 import java.io.PrintStream;
 

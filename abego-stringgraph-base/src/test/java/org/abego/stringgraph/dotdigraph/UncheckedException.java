@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,39 +22,34 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.dotdigraph;
 
-import org.abego.stringgraph.store.StringGraphStore;
-import org.abego.stringgraph.store.StringGraphStores;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import org.eclipse.jdt.annotation.Nullable;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+// Original: https://github.com/abego/commons
+/**
+ * An {@link UncheckedException} mainly serves as a wrapper when rethrowing
+ * a checked exception.
+ */
+@SuppressWarnings("serial")
+public final class UncheckedException extends RuntimeException {
 
-class StringGraphsTest {
-    @Test
-    void constructor() {
-        assertThrows(UnsupportedOperationException.class, StringGraphs::new);
+    private UncheckedException(@Nullable String message, @Nullable Throwable cause) {
+        super(message, cause);
     }
 
-
-    @Test
-    void createStringGraphBuilder() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
-
-        assertNotNull(builder);
+    public static UncheckedException newUncheckedException(
+            @Nullable String message, Throwable cause) {
+        return new UncheckedException(message, cause);
     }
 
-    @Test
-    void getStringGraphStore(@TempDir File tempDir) {
-        File file = new File(tempDir, "sample.graph");
-
-        StringGraphStore store = StringGraphStores.getStringGraphStore(file.toURI());
-
-        assertNotNull(store);
+    public static UncheckedException newUncheckedException(Throwable cause) {
+        return new UncheckedException(cause.getMessage(), cause);
     }
 
+    public static UncheckedException newUncheckedException(
+            @Nullable String message) {
+        return new UncheckedException(message, null);
+    }
 }

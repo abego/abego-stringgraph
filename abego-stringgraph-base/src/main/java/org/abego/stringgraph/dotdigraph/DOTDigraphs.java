@@ -1,10 +1,8 @@
 package org.abego.stringgraph.dotdigraph;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
-
 public final class DOTDigraphs {
     DOTDigraphs() {
-        throw new MustNotInstantiateException();
+        throw new UnsupportedOperationException();
     }
     
     public static DOTDigraphPrinter getDOTDigraphPrinter() {

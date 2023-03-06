@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,41 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.dotdigraph;
 
-public final class StringGraphs {
-    StringGraphs() {
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+import static org.abego.stringgraph.dotdigraph.UncheckedException.newUncheckedException;
+
+@SuppressWarnings("WeakerAccess")
+// Original: https://github.com/abego/commons
+final class ByteArrayOutputStreamUtil {
+
+    ByteArrayOutputStreamUtil() {
         throw new UnsupportedOperationException();
     }
-    
-    public static StringGraphBuilder createStringGraphBuilder() {
-        return StringGraphBuilderImpl.createStringGraphBuilder();
+
+    // --- Queries ---
+
+    public static String textOf(ByteArrayOutputStream outputStream,
+                                String charsetName) {
+        try {
+            return outputStream.toString(charsetName);
+        } catch (UnsupportedEncodingException e) {
+            throw newUncheckedException(e);
+        }
     }
- }
+
+    public static String textOf(ByteArrayOutputStream outputStream,
+                                Charset charset) {
+        return textOf(outputStream, charset.name());
+    }
+
+    public static String textOf(ByteArrayOutputStream outputStream) {
+        return textOf(outputStream, StandardCharsets.UTF_8);
+    }
+
+}

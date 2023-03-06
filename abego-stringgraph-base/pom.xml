@@ -13,9 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.abego.commons</groupId>
-            <artifactId>abego-commons-base</artifactId>
-            <version>${abego-commons-base.version}</version>
+            <groupId>org.abego.stringpool</groupId>
+            <artifactId>abego-stringpool</artifactId>
+            <version>${abego-stringpool.version}</version>
         </dependency>
     </dependencies>
 </project>

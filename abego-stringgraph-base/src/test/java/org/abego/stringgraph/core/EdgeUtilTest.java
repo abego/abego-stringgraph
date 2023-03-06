@@ -24,8 +24,7 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.IterableUtil;
-import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.stringgraph.internal.IterableUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -54,7 +53,7 @@ class EdgeUtilTest {
 
     @Test
     void constructor() {
-        assertThrows(MustNotInstantiateException.class, EdgeUtil::new);
+        assertThrows(UnsupportedOperationException.class, EdgeUtil::new);
     }
 
     @Test

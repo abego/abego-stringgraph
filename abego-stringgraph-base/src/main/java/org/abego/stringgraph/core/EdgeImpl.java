@@ -24,7 +24,7 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.StringUtil;
+import org.abego.stringgraph.internal.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Comparator;

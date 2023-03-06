@@ -24,7 +24,7 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.IterableUtil;
+import org.abego.stringgraph.internal.IterableUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.stringgraph.core.NodeTest.assertNodeEquals;

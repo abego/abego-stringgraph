@@ -24,8 +24,6 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
-
 import java.util.Comparator;
 
 import static org.abego.stringgraph.core.Util.quotedIfNeeded;
@@ -35,7 +33,7 @@ final class EdgeUtil {
     private static final Comparator<Edge> COMPARATOR_LABEL_LAST = createComparatorLabelLast();
 
     EdgeUtil() {
-        throw new MustNotInstantiateException();
+        throw new UnsupportedOperationException();
     }
 
     /**
