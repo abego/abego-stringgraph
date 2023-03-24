@@ -13,21 +13,30 @@ public interface Nodes extends Iterable<Node> {
      * Returns true when this {@link Nodes} object contains exactly on 
      * {@link Node} instance, otherwise false.
      */
-    boolean hasSingleItem();
+    default boolean hasSingleItem() {
+        return getSize() == 1;
+    }
 
     /**
      * Returns the single Node object contained in this {@link Nodes} object or,
      * throws an {@link ExactlyOneNodeExpectedException} when the Nodes object 
      * contains no Node or more than one Node.
      */
-    Node singleItem();
-
+    default Node singleItem() {
+        if (!hasSingleItem()) {
+            throw new ExactlyOneNodeExpectedException(getSize());
+        }
+        return iterator().next();
+    }
+    
     /**
      * Returns the id of the single Node object contained in this {@link Nodes} 
      * object or, throws an {@link ExactlyOneNodeExpectedException} when the 
      * Nodes object contains no Node or more than one Node.
      */
-    String singleItemId();
+    default String singleItemId() {
+        return singleItem().id();
+    }
 
     /**
      * Returns a stream of the Node instances contained in this {@link Nodes}
