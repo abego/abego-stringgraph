@@ -731,4 +731,22 @@ public class StringGraphTest {
         assertTrue(graph.hasEdge(nodeA, "e1", nodeB));
         assertFalse(graph.hasEdge(nodeA, "ex", nodeB));
     }
+
+    @Test
+    void singleItem() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes oneNode = graph.nodes("?", "e1", "B");
+        Nodes twoNodes = graph.nodes("A", null, "?");
+
+        assertTrue(oneNode.hasSingleItem());
+        assertEquals("A", oneNode.singleItem().id());
+        assertEquals("A", oneNode.singleItemId());
+
+        assertFalse(twoNodes.hasSingleItem());
+        ExactlyOneNodeExpectedException e =
+                assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleItem);
+        assertEquals("Exactly one Node expected, got: 2", e.getMessage());
+        e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleItemId);
+        assertEquals("Exactly one Node expected, got: 2", e.getMessage());
+    }
 }

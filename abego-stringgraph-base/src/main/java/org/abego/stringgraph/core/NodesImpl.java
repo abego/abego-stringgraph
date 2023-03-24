@@ -24,6 +24,24 @@ class NodesImpl implements Nodes {
     }
 
     @Override
+    public boolean hasSingleItem() {
+        return getSize() == 1;
+    }
+
+    @Override
+    public Node singleItem() {
+        if (!hasSingleItem()) {
+            throw new ExactlyOneNodeExpectedException(getSize());
+        }
+        return items.iterator().next();
+    }
+
+    @Override
+    public String singleItemId() {
+        return singleItem().id();
+    }
+
+    @Override
     public Stream<Node> stream() {
         return items.stream();
     }
