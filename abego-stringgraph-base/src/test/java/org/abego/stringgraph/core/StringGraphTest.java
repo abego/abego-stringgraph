@@ -30,6 +30,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.abego.stringgraph.core.EdgeDefaultTest.assertEdgesEqualsIgnoreOrder;
@@ -748,5 +749,26 @@ public class StringGraphTest {
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
         e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleItemId);
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
+    }
+
+    @Test
+    void idStream() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes allNodes = graph.nodes();
+        Nodes oneNode = graph.nodes("?", "e1", "B");
+        Nodes twoNodes = graph.nodes("A", null, "?");
+
+        Stream<String> idStream = allNodes.idStream();
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(idStream));
+
+        idStream = oneNode.idStream();
+        assertEquals("A", asCommaSeparatedText(idStream));
+
+        idStream = twoNodes.idStream();
+        assertEquals("B,D", asCommaSeparatedText(idStream));
+    }
+
+    private static String asCommaSeparatedText(Stream<String> isStream) {
+        return isStream.sorted().collect(Collectors.joining(","));
     }
 }

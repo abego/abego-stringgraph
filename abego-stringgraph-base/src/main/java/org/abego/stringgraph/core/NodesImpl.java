@@ -45,6 +45,7 @@ class NodesImpl implements Nodes {
     public Stream<Node> stream() {
         return items.stream();
     }
+    
 
     @Override
     public Iterator<Node> iterator() {

@@ -34,4 +34,12 @@ public interface Nodes extends Iterable<Node> {
      * object.
      */
     Stream<Node> stream();
+    
+    /**
+     * Returns a stream of the id's of the Node instances contained in this 
+     * {@link Nodes} object.
+     */
+    default Stream<String> idStream() {
+        return stream().map(Node::id);
+    }
 }
