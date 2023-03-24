@@ -734,20 +734,20 @@ public class StringGraphTest {
     }
 
     @Test
-    void singleItem() {
+    void singleNode() {
         StringGraph graph = getSampleABCDEF();
         Nodes oneNode = graph.nodes("?", "e1", "B");
         Nodes twoNodes = graph.nodes("A", null, "?");
 
-        assertTrue(oneNode.hasSingleItem());
-        assertEquals("A", oneNode.singleItem().id());
-        assertEquals("A", oneNode.singleItemId());
+        assertTrue(oneNode.hasSingleNode());
+        assertEquals("A", oneNode.singleNode().id());
+        assertEquals("A", oneNode.singleNodeId());
 
-        assertFalse(twoNodes.hasSingleItem());
+        assertFalse(twoNodes.hasSingleNode());
         ExactlyOneNodeExpectedException e =
-                assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleItem);
+                assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleNode);
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
-        e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleItemId);
+        e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleNodeId);
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
     }
 

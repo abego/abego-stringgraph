@@ -13,7 +13,7 @@ public interface Nodes extends Iterable<Node> {
      * Returns true when this {@link Nodes} object contains exactly on 
      * {@link Node} instance, otherwise false.
      */
-    default boolean hasSingleItem() {
+    default boolean hasSingleNode() {
         return getSize() == 1;
     }
 
@@ -22,8 +22,8 @@ public interface Nodes extends Iterable<Node> {
      * throws an {@link ExactlyOneNodeExpectedException} when the Nodes object 
      * contains no Node or more than one Node.
      */
-    default Node singleItem() {
-        if (!hasSingleItem()) {
+    default Node singleNode() {
+        if (!hasSingleNode()) {
             throw new ExactlyOneNodeExpectedException(getSize());
         }
         return iterator().next();
@@ -34,8 +34,8 @@ public interface Nodes extends Iterable<Node> {
      * object or, throws an {@link ExactlyOneNodeExpectedException} when the 
      * Nodes object contains no Node or more than one Node.
      */
-    default String singleItemId() {
-        return singleItem().id();
+    default String singleNodeId() {
+        return singleNode().id();
     }
 
     /**
