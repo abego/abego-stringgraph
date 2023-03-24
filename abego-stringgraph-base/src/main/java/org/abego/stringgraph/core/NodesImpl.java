@@ -5,6 +5,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class NodesImpl implements Nodes {
@@ -27,7 +28,31 @@ class NodesImpl implements Nodes {
     public Stream<Node> stream() {
         return items.stream();
     }
-    
+
+    @Override
+    public Nodes intersectedWith(Nodes otherNodes) {
+        if (otherNodes == this) {
+            return this;
+        }
+        
+        int nA = getSize();
+        int nB = otherNodes.getSize();
+
+        Set<Node> setOfNodes;
+        Nodes nodesToCheck;
+        if (nA >= nB) {
+            setOfNodes = stream().collect(Collectors.toSet());
+            nodesToCheck = otherNodes;
+        } else {
+            setOfNodes = otherNodes.stream().collect(Collectors.toSet());
+            nodesToCheck = this;
+        }
+        Set<Node> result = nodesToCheck.stream()
+                .filter(setOfNodes::contains)
+                .collect(Collectors.toSet());
+        return createNodes(result);
+    }
+
 
     @Override
     public Iterator<Node> iterator() {

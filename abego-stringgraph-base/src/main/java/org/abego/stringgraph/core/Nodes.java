@@ -51,4 +51,12 @@ public interface Nodes extends Iterable<Node> {
     default Stream<String> idStream() {
         return stream().map(Node::id);
     }
+
+    /**
+     * Returns a Nodes object with the intersection of this Nodes object and
+     * the otherNodes object, i.e. with all Node instances that are in both.
+     * <p>
+     * This object and the otherNodes are not modified.
+     */
+    Nodes intersectedWith(Nodes otherNodes);
 }

@@ -768,6 +768,30 @@ public class StringGraphTest {
         assertEquals("B,D", asCommaSeparatedText(idStream));
     }
 
+    @Test
+    void intersectedWith() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes allNodes = graph.nodes();
+        Nodes oneNode = graph.nodes("?", "e1", "B");
+        Nodes twoNodes = graph.nodes("A", null, "?");
+
+        Nodes nodes = allNodes.intersectedWith(allNodes);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.intersectedWith(oneNode);
+        assertEquals("A", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.intersectedWith(twoNodes);
+        assertEquals("B,D", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = twoNodes.intersectedWith(allNodes);
+        assertEquals("B,D", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = oneNode.intersectedWith(twoNodes);
+        assertEquals("", asCommaSeparatedText(nodes.idStream()));
+    }
+
+
     private static String asCommaSeparatedText(Stream<String> isStream) {
         return isStream.sorted().collect(Collectors.joining(","));
     }
