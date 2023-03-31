@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import static org.abego.stringgraph.core.StringGraphImpl.asNode;
 
@@ -51,8 +52,11 @@ final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
         return edges;
     }
 
-    Map<String, Map<String, String>> getNodePropertiesMap() {
-        return nodeProperties;
+    private Function<String, Properties> getNodeProperties() {
+        return node -> {
+            Map<String, String> map = nodeProperties.get(node);
+            return map != null ? PropertiesImpl.createProperties(map) : PropertiesImpl.EMPTY_PROPERTIES;
+        };
     }
 
     @Override
@@ -82,7 +86,7 @@ final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
         return StringGraphImpl.createStringGraph(
                 NodesImpl.createNodes(getNodes()),
                 EdgesImpl.createEdges(getEdges()),
-                getNodePropertiesMap(), 
+                getNodeProperties(), 
                 this);
     }
 

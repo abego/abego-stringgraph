@@ -30,16 +30,16 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 class StringGraphImpl implements StringGraph {
     private final Nodes nodes;
     private final Edges edges;
-    private final Map<String, Map<String, String>> nodeProperties;
+    private final Function<String, Properties> nodeProperties;
     private final EdgeFactory edgeFactory;
 
     /**
@@ -57,7 +57,7 @@ class StringGraphImpl implements StringGraph {
 
     private StringGraphImpl(Nodes nodes,
                             Edges edges,
-                            Map<String, Map<String, String>> nodeProperties,
+                            Function<String, Properties> nodeProperties,
                             EdgeFactory edgeFactory) {
         this.nodes = nodes;
         this.edges = edges;
@@ -80,7 +80,7 @@ class StringGraphImpl implements StringGraph {
     public static StringGraph createStringGraph(
             Nodes nodes,
             Edges edges,
-            Map<String, Map<String, String>> nodeProperties,
+            Function<String, Properties> nodeProperties,
             EdgeFactory edgeFactory) {
         return new StringGraphImpl(nodes, edges, nodeProperties, edgeFactory);
     }
@@ -207,8 +207,7 @@ class StringGraphImpl implements StringGraph {
 
     @Override
     public Properties getNodeProperties(String node) {
-        Map<String, String> map = nodeProperties.get(node);
-        return map != null ? PropertiesImpl.createProperties(map) : PropertiesImpl.EMPTY_PROPERTIES;
+        return nodeProperties.apply(node);
     }
 
     @Override
