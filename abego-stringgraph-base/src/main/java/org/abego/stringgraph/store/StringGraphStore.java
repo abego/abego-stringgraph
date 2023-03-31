@@ -27,12 +27,33 @@ package org.abego.stringgraph.store;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphConstructing;
 
+/**
+ *  A store that holds a StringGraph.
+ */
 public interface StringGraphStore {
 
+    /**
+     * Writes the {@code stringGraph} to the store.
+     */
     void writeStringGraph(StringGraph stringGraph);
 
+    /**
+     * Reads the {@link StringGraph} from the store and returns it.
+     * <p>
+     * The StringGraph is constructed using an efficient internal implementation.
+     * For more control over the StringGraph construction use the method
+     * {@link #readStringGraph(StringGraphConstructing)}.
+     */
     StringGraph readStringGraph();
 
-    void readStringGraph(StringGraphConstructing graphConstructing);
+    /**
+     * Reads the {@link StringGraph} from the store and calls the corresponding
+     * methods of the {@link StringGraphConstructing} object to construct the 
+     * StringGraph.
+     * <p>
+     * The same StringGraphConstructing object may be used with different
+     * StringGraphStores, e.g. to create a "merged" StringGraph.
+     */
+    void readStringGraph(StringGraphConstructing stringGraphConstructing);
     
 }
