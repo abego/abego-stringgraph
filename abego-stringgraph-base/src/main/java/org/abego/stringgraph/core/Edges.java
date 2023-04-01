@@ -9,13 +9,15 @@ public interface Edges extends Iterable<Edge> {
     int getSize();
 
     boolean contains(Edge edge);
-    
+
+    boolean contains(String fromNode, String label, String toNode);
+
     Stream<Edge> stream();
 
     Edges filtered(Predicate<Edge> edgePredicate);
 
     Edges intersected(Edges otherEdges);
-    
+
     Iterable<Edge> sorted(Comparator<? super Edge> comparator);
 
     Iterable<Edge> sorted();

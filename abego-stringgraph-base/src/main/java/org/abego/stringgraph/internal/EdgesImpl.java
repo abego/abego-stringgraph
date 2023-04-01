@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
-import static org.abego.stringgraph.internal.SetUtil.asSet;
 
 public final class EdgesImpl implements Edges {
     private static final Edges EMPTY_EDGES = new EdgesImpl(emptySet());
@@ -51,11 +50,7 @@ public final class EdgesImpl implements Edges {
     static Edges createEdges(Set<Edge> items) {
         return items.isEmpty() ? emptyEdges() : new EdgesImpl(items);
     }
-
-    static Edges createEdges(Edge... items) {
-        return items.length == 0 ? emptyEdges() : createEdges(asSet(items));
-    }
-
+    
     static Edges emptyEdges() {
         return EMPTY_EDGES;
     }
@@ -86,6 +81,14 @@ public final class EdgesImpl implements Edges {
     @Override
     public boolean contains(Edge edge) {
         return items.contains(edge);
+    }
+
+    @Override
+    public boolean contains(String fromNode, String label, String toNode) {
+        return items.stream().anyMatch(e->
+                e.getFromNode().id().equals(fromNode) &&
+                        e.getToNode().id().equals(toNode) &&
+                        e.getLabel().equals(label));
     }
 
     @Override

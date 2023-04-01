@@ -25,7 +25,6 @@
 package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
-import org.abego.stringgraph.core.EdgeFactory;
 import org.abego.stringgraph.core.EdgeLabels;
 import org.abego.stringgraph.core.Edges;
 import org.abego.stringgraph.core.Node;
@@ -49,7 +48,6 @@ public class StringGraphImpl implements StringGraph {
     private final Nodes nodes;
     private final Edges edges;
     private final Function<String, Properties> nodeProperties;
-    private final EdgeFactory edgeFactory;
 
     /**
      * Links every fromNode to the Edges it belongs to.
@@ -66,12 +64,10 @@ public class StringGraphImpl implements StringGraph {
 
     private StringGraphImpl(Nodes nodes,
                             Edges edges,
-                            Function<String, Properties> nodeProperties,
-                            EdgeFactory edgeFactory) {
+                            Function<String, Properties> nodeProperties) {
         this.nodes = nodes;
         this.edges = edges;
         this.nodeProperties = nodeProperties;
-        this.edgeFactory = edgeFactory;
 
         EdgesIndexBuilder<Node> edgesIndexForFromNodeBuilder = EdgesIndexBuilder.createEdgesIndexBuilder();
         EdgesIndexBuilder<Node> edgesIndexForToNodeBuilder = EdgesIndexBuilder.createEdgesIndexBuilder();
@@ -89,9 +85,8 @@ public class StringGraphImpl implements StringGraph {
     public static StringGraph createStringGraph(
             Nodes nodes,
             Edges edges,
-            Function<String, Properties> nodeProperties,
-            EdgeFactory edgeFactory) {
-        return new StringGraphImpl(nodes, edges, nodeProperties, edgeFactory);
+            Function<String, Properties> nodeProperties) {
+        return new StringGraphImpl(nodes, edges, nodeProperties);
     }
 
     @Override
@@ -192,26 +187,18 @@ public class StringGraphImpl implements StringGraph {
         if (to != null) {
             edgesByPart.add(edgesToNode(to));
         }
-        
+
         if (edgesByPart.isEmpty()) {
             // no restriction -> all edges
             return edges();
         }
-        
-        if (edgesByPart.size() == 1) {
-            // one restricting part -> use those edges
-            return edgesByPart.get(0);
+
+        Edges result = edgesByPart.get(0);
+        for (int i = 1; i < edgesByPart.size(); i++) {
+            result = result.intersected(edgesByPart.get(i));
         }
-        
-        if (edgesByPart.size() == 3) {
-            // all parts restricted -> exactly one edge can be selected, if it exists
-            Edge candidate = edgeFactory.newEdge(from, label, to);
-            return edges.contains(candidate) 
-                    ? EdgesImpl.createEdges(candidate) : EdgesImpl.emptyEdges();
-        }
-        
-        // we have exactly 2 Sets for the parts. Return the intersection of both
-        return edgesByPart.get(0).intersected(edgesByPart.get(1));
+
+        return result;
     }
 
     @Override
@@ -322,7 +309,7 @@ public class StringGraphImpl implements StringGraph {
 
     @Override
     public boolean hasEdge(String fromNode, String edgeLabel, String toNode) {
-        return edges.contains(edgeFactory.newEdge(fromNode, edgeLabel, toNode));
+        return edges.contains(fromNode, edgeLabel, toNode);
     }
 
     @Override

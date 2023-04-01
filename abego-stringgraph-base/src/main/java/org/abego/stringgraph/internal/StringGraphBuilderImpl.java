@@ -25,7 +25,6 @@
 package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
-import org.abego.stringgraph.core.EdgeFactory;
 import org.abego.stringgraph.core.Node;
 import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.StringGraph;
@@ -40,7 +39,7 @@ import java.util.function.Function;
 
 import static org.abego.stringgraph.internal.StringGraphImpl.asNode;
 
-public final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
+public final class StringGraphBuilderImpl implements StringGraphBuilder {
     private final Set<Node> nodes = new HashSet<>();
     private final Set<Edge> edges = new HashSet<>();
     private final Map<String, Map<String, String>> nodeProperties = new HashMap<>();
@@ -94,12 +93,10 @@ public final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFac
         return StringGraphImpl.createStringGraph(
                 NodesImpl.createNodes(getNodes()),
                 EdgesImpl.createEdges(getEdges()),
-                getNodeProperties(), 
-                this);
+                getNodeProperties());
     }
 
-    @Override
-    public Edge newEdge(String fromNode, String edgeLabel, String toNode) {
+    private Edge newEdge(String fromNode, String edgeLabel, String toNode) {
         return EdgeImpl.createEdge(asNode(fromNode), edgeLabel, asNode(toNode));
     }
 

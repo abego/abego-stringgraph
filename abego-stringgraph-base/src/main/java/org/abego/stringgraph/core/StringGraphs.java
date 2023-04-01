@@ -26,7 +26,6 @@ package org.abego.stringgraph.core;
 
 import org.abego.stringgraph.internal.StringGraphBuilderImpl;
 import org.abego.stringgraph.internal.StringGraphImpl;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.function.Function;
 
@@ -34,8 +33,16 @@ public final class StringGraphs {
     StringGraphs() {
         throw new UnsupportedOperationException();
     }
-    
+
     public static StringGraphBuilder createStringGraphBuilder() {
         return StringGraphBuilderImpl.createStringGraphBuilder();
     }
- }
+
+    public static StringGraph createStringGraph(
+            Nodes nodes,
+            Edges edges,
+            Function<String, Properties> nodeProperties) {
+        return StringGraphImpl.createStringGraph(
+                nodes, edges, nodeProperties);
+    }
+}
