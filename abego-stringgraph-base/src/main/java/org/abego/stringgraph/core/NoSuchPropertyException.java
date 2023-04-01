@@ -25,7 +25,7 @@
 package org.abego.stringgraph.core;
 
 public class NoSuchPropertyException extends StringGraphException{
-    NoSuchPropertyException(String propertyName) {
+    public NoSuchPropertyException(String propertyName) {
         super(String.format("No such property: %s", propertyName));
     }
 }

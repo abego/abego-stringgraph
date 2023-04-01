@@ -24,6 +24,8 @@
 
 package org.abego.stringgraph.store;
 
+import org.abego.stringgraph.core.NoSuchPropertyException;
+import org.abego.stringgraph.internal.EdgeUtil;
 import org.abego.stringgraph.internal.FileUtil;
 import org.abego.stringgraph.internal.VLQUtil;
 import org.abego.stringpool.StringPool;

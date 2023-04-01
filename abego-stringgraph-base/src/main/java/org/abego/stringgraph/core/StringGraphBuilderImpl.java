@@ -24,6 +24,8 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.PropertiesImpl;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

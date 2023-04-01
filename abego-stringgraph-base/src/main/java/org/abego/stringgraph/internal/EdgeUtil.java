@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
+
+import org.abego.stringgraph.core.Edge;
 
 import java.util.Comparator;
 
-import static org.abego.stringgraph.core.Util.quotedIfNeeded;
+import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
 
-final class EdgeUtil {
+public final class EdgeUtil {
     private static final Comparator<Edge> COMPARATOR = createComparator();
     private static final Comparator<Edge> COMPARATOR_LABEL_LAST = createComparatorLabelLast();
 

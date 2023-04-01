@@ -4,6 +4,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
 
+import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
+
 class NodeImpl implements Node {
     private final String id;
 
@@ -22,7 +24,7 @@ class NodeImpl implements Node {
 
     @Override
     public String getText() {
-        return Util.quotedIfNeeded(id());
+        return quotedIfNeeded(id());
     }
 
     @Override

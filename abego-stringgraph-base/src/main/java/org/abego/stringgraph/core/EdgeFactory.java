@@ -1,5 +1,5 @@
 package org.abego.stringgraph.core;
  
-interface EdgeFactory {
+public interface EdgeFactory {
     Edge newEdge(String fromNode, String edgeLabel, String toNode);
 }

@@ -22,8 +22,11 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
+import org.abego.stringgraph.core.NoSuchPropertyException;
+import org.abego.stringgraph.core.Properties;
+import org.abego.stringgraph.core.Property;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.HashMap;
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-final class PropertiesImpl implements Properties {
+public final class PropertiesImpl implements Properties {
     private final Map<String, String> propertyMap;
     @Nullable
     private List<String> propertyNames;
@@ -46,7 +49,7 @@ final class PropertiesImpl implements Properties {
         this.propertyMap = propertyMap;
     }
 
-    static Properties createProperties(Map<String, String> propertyMap) {
+    public static Properties createProperties(Map<String, String> propertyMap) {
         return new PropertiesImpl(propertyMap);
     }
 

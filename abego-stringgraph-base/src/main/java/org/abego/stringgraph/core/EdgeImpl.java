@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.EdgeUtil;
 import org.abego.stringgraph.internal.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 

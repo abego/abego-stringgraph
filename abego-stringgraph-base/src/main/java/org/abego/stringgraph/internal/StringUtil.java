@@ -26,11 +26,15 @@ package org.abego.stringgraph.internal;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.regex.Pattern;
+
 // Original: https://github.com/abego/commons
 public final class StringUtil {
     public static final String NULL_STRING = "null"; //NON-NLS
     
-    private StringUtil() {}
+    StringUtil() {
+        throw new UnsupportedOperationException();
+    }
 
     //region quoted2 (from abego-commons)
 
@@ -172,4 +176,19 @@ public final class StringUtil {
 
     //endregion
 
+    //region quotedIfNeeded
+    
+    public static String quotedIfNeeded(String s) {
+        return needsQuotes(s) ? StringUtil.quoted2(s) : s;
+    }
+
+    private final static Pattern NO_QUOTES_NEEDED_PATTERN = Pattern.compile(
+            "[-\\w_+*=.:;/@?&#()\\[\\]{}<>]+");
+
+    private static boolean needsQuotes(String s) {
+        return !NO_QUOTES_NEEDED_PATTERN.matcher(s).matches();
+    }
+
+
+    //endregion
 }

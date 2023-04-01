@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.EdgeUtil;
 import org.abego.stringgraph.internal.IterableUtil;
 import org.junit.jupiter.api.Test;
 

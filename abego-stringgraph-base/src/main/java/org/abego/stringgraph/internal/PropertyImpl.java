@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
+import org.abego.stringgraph.core.Property;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
 
-final class PropertyImpl implements Property {
+public final class PropertyImpl implements Property {
     private final String name;
     private final String value;
 
