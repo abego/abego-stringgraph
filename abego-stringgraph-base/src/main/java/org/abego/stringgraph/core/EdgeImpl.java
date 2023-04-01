@@ -28,13 +28,11 @@ import org.abego.stringgraph.internal.EdgeUtil;
 import org.abego.stringgraph.internal.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 import static org.abego.stringgraph.core.StringGraphImpl.asNode;
 
 final class EdgeImpl implements Edge {
-    private static final Comparator<Edge> COMPARATOR = EdgeUtil.getComparator();
     private final Node fromNode;
     private final String label;
     private final Node toNode;
@@ -101,6 +99,6 @@ final class EdgeImpl implements Edge {
 
     @Override
     public int compareTo(Edge o) {
-        return COMPARATOR.compare(this, o);
+        return EdgeUtil.getComparator().compare(this, o);
     }
 }
