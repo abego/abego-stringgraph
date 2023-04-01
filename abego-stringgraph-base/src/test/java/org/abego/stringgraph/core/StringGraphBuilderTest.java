@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.StringGraphBuilderImpl;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

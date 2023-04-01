@@ -22,9 +22,15 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.internal.PropertiesImpl;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.EdgeFactory;
+import org.abego.stringgraph.core.Node;
+import org.abego.stringgraph.core.Properties;
+import org.abego.stringgraph.core.StringGraph;
+import org.abego.stringgraph.core.StringGraphBuilder;
+import org.abego.stringgraph.core.StringGraphException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,9 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import static org.abego.stringgraph.core.StringGraphImpl.asNode;
+import static org.abego.stringgraph.internal.StringGraphImpl.asNode;
 
-final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
+public final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
     private final Set<Node> nodes = new HashSet<>();
     private final Set<Edge> edges = new HashSet<>();
     private final Map<String, Map<String, String>> nodeProperties = new HashMap<>();
@@ -42,7 +48,7 @@ final class StringGraphBuilderImpl implements StringGraphBuilder, EdgeFactory {
     private StringGraphBuilderImpl() {
     }
 
-    static StringGraphBuilder createStringGraphBuilder() {
+    public static StringGraphBuilder createStringGraphBuilder() {
         return new StringGraphBuilderImpl();
     }
 

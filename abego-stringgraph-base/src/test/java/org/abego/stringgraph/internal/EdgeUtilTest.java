@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.internal.EdgeUtil;
-import org.abego.stringgraph.internal.IterableUtil;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
-import static org.abego.stringgraph.core.EdgeDefaultTest.getEdgeSample;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -59,7 +58,7 @@ class EdgeUtilTest {
 
     @Test
     void edgeText() {
-        String edgeText = EdgeUtil.calcEdgeText(getEdgeSample());
+        String edgeText = EdgeUtil.calcEdgeText(EdgeDefaultTest.getEdgeSample());
 
         assertEquals("f --lbl--> t", edgeText);
     }

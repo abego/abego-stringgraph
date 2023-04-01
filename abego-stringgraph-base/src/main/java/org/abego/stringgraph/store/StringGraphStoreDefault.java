@@ -50,6 +50,16 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.abego.stringgraph.internal.EdgeUtil.calcEdgeText;
+import static org.abego.stringgraph.internal.PropertiesImpl.EMPTY_PROPERTIES;
+import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
 
 class StringGraphStoreDefault implements StringGraphStore {
     //region FieldsState

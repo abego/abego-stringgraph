@@ -1,5 +1,6 @@
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.EdgeLabelsImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

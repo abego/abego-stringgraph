@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,18 +22,35 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.abego.stringgraph.core.Edge;
 
-public class StringGraphException extends RuntimeException {
-    private static final long serialVersionUID = 2937090446691077932L;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-    public StringGraphException(String message, @Nullable Throwable cause) {
-        super(message, cause);
+class EdgesIndexBuilder<K> {
+    private final Map<K, Set<Edge>> map = new HashMap<>();
+    private boolean building = true;
+
+    private EdgesIndexBuilder() {
     }
 
-    public StringGraphException(String message) {
-        this(message, null);
+    public static <K> EdgesIndexBuilder<K> createEdgesIndexBuilder() {
+        return new EdgesIndexBuilder<>();
+    }
+
+    public void add(K key, Edge edge) {
+        map.computeIfAbsent(key, k -> new HashSet<>()).add(edge);
+    }
+
+    public EdgesIndex<K> build() {
+        if (!building) {
+            throw new IllegalStateException("Must call `build()` only once.");
+        }
+        building = false;
+        return EdgesIndexImpl.createEdgesIndex(map);
     }
 }

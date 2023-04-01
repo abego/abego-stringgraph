@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.internal.IterableUtil;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.stringgraph.core.NodeTest.assertNodeEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class EdgeDefaultTest {
+public class EdgeDefaultTest {
 
     public static Edge getEdgeSample() {
         return EdgeImpl.createEdge("f", "lbl", "t");

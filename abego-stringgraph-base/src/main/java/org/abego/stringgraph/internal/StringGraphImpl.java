@@ -22,9 +22,18 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.internal.StringUtil;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.EdgeFactory;
+import org.abego.stringgraph.core.EdgeLabels;
+import org.abego.stringgraph.core.Edges;
+import org.abego.stringgraph.core.Node;
+import org.abego.stringgraph.core.Nodes;
+import org.abego.stringgraph.core.Properties;
+import org.abego.stringgraph.core.Property;
+import org.abego.stringgraph.core.StringGraph;
+import org.abego.stringgraph.core.StringGraphException;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -36,7 +45,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class StringGraphImpl implements StringGraph {
+public class StringGraphImpl implements StringGraph {
     private final Nodes nodes;
     private final Edges edges;
     private final Function<String, Properties> nodeProperties;

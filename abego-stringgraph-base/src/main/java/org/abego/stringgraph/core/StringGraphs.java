@@ -24,6 +24,12 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.internal.StringGraphBuilderImpl;
+import org.abego.stringgraph.internal.StringGraphImpl;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.function.Function;
+
 public final class StringGraphs {
     StringGraphs() {
         throw new UnsupportedOperationException();

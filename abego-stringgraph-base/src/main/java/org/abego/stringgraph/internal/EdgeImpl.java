@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.internal.EdgeUtil;
-import org.abego.stringgraph.internal.StringUtil;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Node;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
 
-import static org.abego.stringgraph.core.StringGraphImpl.asNode;
+import static org.abego.stringgraph.internal.StringGraphImpl.asNode;
 
 final class EdgeImpl implements Edge {
     private final Node fromNode;

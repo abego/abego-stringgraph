@@ -25,6 +25,7 @@
 package org.abego.stringgraph.core;
 
 import org.abego.stringgraph.internal.IterableUtil;
+import org.abego.stringgraph.internal.StringGraphBuilderImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -33,7 +34,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.abego.stringgraph.core.EdgeDefaultTest.assertEdgesEqualsIgnoreOrder;
+import static org.abego.stringgraph.internal.EdgeDefaultTest.assertEdgesEqualsIgnoreOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,10 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.core;
+/**
+ * The "store" package.
+ **/
+@NonNullByDefault
+package org.abego.stringgraph.store;
 
-import org.eclipse.jdt.annotation.Nullable;
-
-public class StringGraphException extends RuntimeException {
-    private static final long serialVersionUID = 2937090446691077932L;
-
-    public StringGraphException(String message, @Nullable Throwable cause) {
-        super(message, cause);
-    }
-
-    public StringGraphException(String message) {
-        this(message, null);
-    }
-}
+import org.eclipse.jdt.annotation.NonNullByDefault;
