@@ -93,9 +93,8 @@ public final class StringUtil {
      * @param text                 the String to be escaped and appended
      * @param singleQuoteText      the text to use to "escape" a single quote char
      * @param nonASCIICharAppender used to append the text for non-ASCII chars
-     * @return the escaped string, as it would be written inside a String literal
      */
-    private static StringBuilder appendEscapedString(
+    private static void appendEscapedString(
             StringBuilder stringBuilder,
             @Nullable String text,
             String singleQuoteText,
@@ -108,7 +107,6 @@ public final class StringUtil {
                 appendEscapedChar(stringBuilder, c, singleQuoteText, doubleQuoteText, nonASCIICharAppender);
             }
         }
-        return stringBuilder;
     }
 
     private static void appendEscapedChar(
