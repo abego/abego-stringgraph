@@ -30,7 +30,7 @@ class NodesImpl implements Nodes {
     }
 
     @Override
-    public Nodes intersectedWith(Nodes otherNodes) {
+    public Nodes intersected(Nodes otherNodes) {
         if (otherNodes == this) {
             return this;
         }

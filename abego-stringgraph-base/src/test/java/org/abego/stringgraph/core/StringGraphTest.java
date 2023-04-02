@@ -775,19 +775,19 @@ public class StringGraphTest {
         Nodes oneNode = graph.nodes("?", "e1", "B");
         Nodes twoNodes = graph.nodes("A", null, "?");
 
-        Nodes nodes = allNodes.intersectedWith(allNodes);
+        Nodes nodes = allNodes.intersected(allNodes);
         assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
 
-        nodes = allNodes.intersectedWith(oneNode);
+        nodes = allNodes.intersected(oneNode);
         assertEquals("A", asCommaSeparatedText(nodes.idStream()));
 
-        nodes = allNodes.intersectedWith(twoNodes);
+        nodes = allNodes.intersected(twoNodes);
         assertEquals("B,D", asCommaSeparatedText(nodes.idStream()));
 
-        nodes = twoNodes.intersectedWith(allNodes);
+        nodes = twoNodes.intersected(allNodes);
         assertEquals("B,D", asCommaSeparatedText(nodes.idStream()));
 
-        nodes = oneNode.intersectedWith(twoNodes);
+        nodes = oneNode.intersected(twoNodes);
         assertEquals("", asCommaSeparatedText(nodes.idStream()));
     }
 

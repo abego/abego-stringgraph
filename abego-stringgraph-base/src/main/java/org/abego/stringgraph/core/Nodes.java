@@ -58,5 +58,5 @@ public interface Nodes extends Iterable<Node> {
      * <p>
      * This object and the otherNodes are not modified.
      */
-    Nodes intersectedWith(Nodes otherNodes);
+    Nodes intersected(Nodes otherNodes);
 }
