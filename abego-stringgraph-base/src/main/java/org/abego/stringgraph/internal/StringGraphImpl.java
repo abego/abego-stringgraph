@@ -50,32 +50,8 @@ public class StringGraphImpl implements StringGraph {
 
     private final StringGraphData data;
 
-    /**
-     * Links every fromNode to the Edges it belongs to.
-     */
-    private final EdgesIndex<Node> edgesIndexForFromNode;
-    /**
-     * Links every toNode to the Edges it belongs to.
-     */
-    private final EdgesIndex<Node> edgesIndexForToNode;
-    /**
-     * Links every label to the Edges it belongs to.
-     */
-    private final EdgesIndex<String> edgesIndexForLabel;
-
     private StringGraphImpl(StringGraphData data) {
         this.data = data;
-        EdgesIndexBuilder<Node> edgesIndexForFromNodeBuilder = EdgesIndexBuilder.createEdgesIndexBuilder(data::createEdges);
-        EdgesIndexBuilder<Node> edgesIndexForToNodeBuilder = EdgesIndexBuilder.createEdgesIndexBuilder(data::createEdges);
-        EdgesIndexBuilder<String> edgesIndexForLabelBuilder = EdgesIndexBuilder.createEdgesIndexBuilder(data::createEdges);
-        for (Edge e : data.getEdges()) {
-            edgesIndexForFromNodeBuilder.add(e.getFromNode(), e);
-            edgesIndexForToNodeBuilder.add(e.getToNode(), e);
-            edgesIndexForLabelBuilder.add(e.getLabel(), e);
-        }
-        edgesIndexForFromNode = edgesIndexForFromNodeBuilder.build();
-        edgesIndexForToNode = edgesIndexForToNodeBuilder.build();
-        edgesIndexForLabel = edgesIndexForLabelBuilder.build();
     }
 
     public static StringGraph createStringGraph(StringGraphData data) {
@@ -84,7 +60,7 @@ public class StringGraphImpl implements StringGraph {
 
     @Override
     public Nodes fromNodes() {
-        return createNodes(edgesIndexForFromNode.keySet());
+        return data.fromNodes();
     }
 
     @Override
@@ -139,17 +115,17 @@ public class StringGraphImpl implements StringGraph {
                 return nodesFromNodeViaEdgeLabeled(fromPattern, labelPattern);
             case 0 + 3 * 1 + 9 * 2: // "?", "lab", null
                 return createNodes(
-                        edgesIndexForLabel.edges(labelPattern).stream()
+                        data.edgesIndexForLabel.edges(labelPattern).stream()
                                 .map(Edge::getFromNode)
                                 .collect(Collectors.toSet()));
             case 2 + 3 * 1 + 9 * 0: // null, "lab", "?"
                 return createNodes(
-                        edgesIndexForLabel.edges(labelPattern).stream()
+                        data.edgesIndexForLabel.edges(labelPattern).stream()
                                 .map(Edge::getToNode)
                                 .collect(Collectors.toSet()));
             case 0 + 3 * 1 + 9 * 0: // "?", "lab", "?"
                 Set<Node> nodes = new HashSet<>();
-                edgesIndexForLabel.edges(labelPattern).forEach(edge -> {
+                data.edgesIndexForLabel.edges(labelPattern).forEach(edge -> {
                     nodes.add(edge.getFromNode());
                     nodes.add(edge.getToNode());
                 });
@@ -227,18 +203,18 @@ public class StringGraphImpl implements StringGraph {
 
     @Override
     public Nodes toNodes() {
-        return createNodes(edgesIndexForToNode.keySet());
+        return data.toNodes();
     }
 
     @Override
     public EdgeLabels edgeLabels() {
-        return EdgeLabelsImpl.createEdgeLabels(edgesIndexForLabel.keySet());
+        return EdgeLabelsImpl.createEdgeLabels(data.edgesIndexForLabel.keyStrings());
     }
 
     @Override
     public Nodes nodesFromNode(String fromNode) {
         return selectNodes(fromNode,
-                edgesIndexForFromNode::edges,
+                data.edgesIndexForFromNode::edges,
                 e -> true,
                 Edge::getToNode);
     }
@@ -248,7 +224,7 @@ public class StringGraphImpl implements StringGraph {
         return valueWithNodeOrElse(
                 fromNode,
                 n -> EdgeLabelsImpl.createEdgeLabels(
-                        edgesIndexForFromNode.edges(n).stream()
+                        data.edgesIndexForFromNode.edges(n).stream()
                                 .map(Edge::getLabel)
                                 .collect(Collectors.toSet())),
                 EdgeLabelsImpl.EMPTY_EDGE_LABELS);
@@ -259,7 +235,7 @@ public class StringGraphImpl implements StringGraph {
     public Nodes nodesFromNodeViaEdgeLabeled(
             String fromNode, String edgeLabel) {
         return selectNodes(fromNode,
-                edgesIndexForFromNode::edges,
+                data.edgesIndexForFromNode::edges,
                 e -> e.getLabel().equals(edgeLabel),
                 Edge::getToNode);
     }
@@ -267,7 +243,7 @@ public class StringGraphImpl implements StringGraph {
     @Override
     public Nodes nodesToNode(String toNode) {
         return selectNodes(toNode,
-                edgesIndexForToNode::edges,
+                data.edgesIndexForToNode::edges,
                 e -> true,
                 Edge::getFromNode);
     }
@@ -277,7 +253,7 @@ public class StringGraphImpl implements StringGraph {
         return valueWithNodeOrElse(
                 toNode,
                 n -> EdgeLabelsImpl.createEdgeLabels(
-                        edgesIndexForToNode.edges(n).stream()
+                        data.edgesIndexForToNode.edges(n).stream()
                                 .map(Edge::getLabel)
                                 .collect(Collectors.toSet())),
                 EdgeLabelsImpl.EMPTY_EDGE_LABELS);
@@ -287,7 +263,7 @@ public class StringGraphImpl implements StringGraph {
     @Override
     public Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode) {
         try {
-            Edges edges = edgesIndexForToNode.edges(asNode(toNode));
+            Edges edges = data.edgesIndexForToNode.edges(toNode);
             return data.fromNodeOfEdgesWithLabel(edges, edgeLabel);
         } catch(NoSuchElementException e) {
             return EmptyNodes.EMPTY_NODES;
@@ -301,19 +277,19 @@ public class StringGraphImpl implements StringGraph {
 
     @Override
     public Edges edgesLabeled(String edgeLabel) {
-        return edgesIndexForLabel.edges(edgeLabel);
+        return data.edgesIndexForLabel.edges(edgeLabel);
     }
 
     @Override
     public Edges edgesFromNode(String fromNode) {
         return valueWithNodeOrElse(
-                fromNode, edgesIndexForFromNode::edges, EMPTY_EDGES);
+                fromNode, data.edgesIndexForFromNode::edges, EMPTY_EDGES);
     }
 
     @Override
     public Edges edgesToNode(String toNode) {
         return valueWithNodeOrElse(
-                toNode, edgesIndexForToNode::edges, EMPTY_EDGES);
+                toNode, data.edgesIndexForToNode::edges, EMPTY_EDGES);
     }
 
     @Override

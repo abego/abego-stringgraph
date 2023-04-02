@@ -34,10 +34,14 @@ import org.abego.stringgraph.core.Property;
 import org.abego.stringgraph.core.StringGraphConstructing;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -49,6 +53,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.abego.stringgraph.internal.EdgeUtil.calcEdgeText;
+import static org.abego.stringgraph.internal.EmptyEdges.EMPTY_EDGES;
 import static org.abego.stringgraph.internal.EmptyNodes.EMPTY_NODES;
 import static org.abego.stringgraph.internal.StringUtil.quoted2;
 import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
@@ -62,6 +67,20 @@ public class StringGraphData {
 
     private final StringGraphDataProvider provider;
     private final Set<Integer> nodeIds;
+
+    /**
+     * Links every fromNode to the Edges it belongs to.
+     */
+    final EdgesIndex edgesIndexForFromNode = new EdgesIndex();
+    /**
+     * Links every toNode to the Edges it belongs to.
+     */
+    final EdgesIndex edgesIndexForToNode = new EdgesIndex();
+    /**
+     * Links every label to the Edges it belongs to.
+     */
+    final EdgesIndex edgesIndexForLabel = new EdgesIndex();
+
 
     private class MyNode implements Node {
         private final int id;
@@ -480,31 +499,59 @@ public class StringGraphData {
         }
     }
 
+    class EdgesIndex {
+        private final Map<Integer, List<Integer>> map = new HashMap<>();
+        private final Map<Integer, Edges> edgesMap = new HashMap<>();
+
+        public void add(int key, int edgeId) {
+            map.computeIfAbsent(key, k -> new ArrayList<>()).add(edgeId);
+        }
+
+        public Edges edges(int key) {
+            return key != 0
+                    ? edgesMap.computeIfAbsent(key, k -> new MyEdges(intArray(map.get(k))))
+                    : EMPTY_EDGES;
+        }
+
+        public Edges edges(Node node) {
+            return edges(asMyNode(node).id);
+        }
+
+        public Edges edges(String string) {
+            return edges(provider.getStringIdOrZero(string));
+        }
+
+        public int[] keys() {
+            return intArray(map.keySet());
+        }
+
+        public Set<String> keyStrings() {
+            return map.keySet().stream()
+                    .map(provider::getString)
+                    .collect(Collectors.toSet());
+        }
+    }
+
     private StringGraphData(StringGraphDataProvider provider) {
         this.provider = provider;
         this.nodeIds = new HashSet<>();
         for (int i : provider.getNodesIds()) {
             nodeIds.add(i);
         }
+
+        int edgesCount = provider.getEdgesCount();
+        for (int i = 0; i < edgesCount; i++) {
+            int edgeId = i * 3;//TODO: internal know how. Avoid this.
+            edgesIndexForFromNode.add(provider.getFromId(edgeId), edgeId);
+            edgesIndexForToNode.add(provider.getToId(edgeId), edgeId);
+            edgesIndexForLabel.add(provider.getLabelId(edgeId), edgeId);
+        }
     }
 
     public static StringGraphData createStringGraphData(StringGraphDataProvider provider) {
         return new StringGraphData(provider);
     }
-
-    public Edges createEdges(Set<Edge> edges) {
-        int edgesCount = edges.size();
-        if (edgesCount == 0) {
-            return EmptyEdges.EMPTY_EDGES;
-        }
-        int[] edgesIDs = new int[edgesCount];
-        int i = 0;
-        for (Edge e : edges) {
-            edgesIDs[i++] = asMyEdge(e).edgesOffset;
-        }
-        return new MyEdges(edgesIDs);
-    }
-
+    
     public Nodes createNodes(Set<Node> nodes) {
         if (nodes.isEmpty()) {
             return EMPTY_NODES;
@@ -600,6 +647,13 @@ public class StringGraphData {
         return Objects.hash(provider, nodeIds);
     }
 
+    private static MyNode asMyNode(Node node) {
+        if (!(node instanceof MyNode)) {
+            throw new IllegalArgumentException("MyNode expected, got " + node.getClass());
+        }
+        return (MyNode) node;
+    }
+
     private static MyEdge asMyEdge(Edge edge) {
         if (!(edge instanceof MyEdge)) {
             throw new IllegalArgumentException("MyEdge expected, got " + edge.getClass());
@@ -635,5 +689,38 @@ public class StringGraphData {
             }
         }
         return new MyNodes(Arrays.copyOf(buffer, i));
+    }
+
+    private static int[] intArray(@Nullable Collection<Integer> integers) {
+        if (integers == null) {
+            return new int[0];
+        }
+        int n = integers.size();
+        int[] result = new int[n];
+        int i = 0;
+        for (int x : integers) {
+            result[i++] = x;
+        }
+        return result;
+    }
+
+    @Nullable
+    private Nodes fromNodes;
+
+    public Nodes fromNodes() {
+        if (fromNodes == null) {
+            fromNodes = new MyNodes(edgesIndexForFromNode.keys());
+        }
+        return fromNodes;
+    }
+
+    @Nullable
+    private Nodes toNodes;
+
+    public Nodes toNodes() {
+        if (toNodes == null) {
+            toNodes = new MyNodes(edgesIndexForToNode.keys());
+        }
+        return toNodes;
     }
 }
