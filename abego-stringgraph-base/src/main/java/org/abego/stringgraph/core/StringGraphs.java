@@ -25,9 +25,6 @@
 package org.abego.stringgraph.core;
 
 import org.abego.stringgraph.internal.StringGraphBuilderImpl;
-import org.abego.stringgraph.internal.StringGraphImpl;
-
-import java.util.function.Function;
 
 public final class StringGraphs {
     StringGraphs() {
@@ -36,13 +33,5 @@ public final class StringGraphs {
 
     public static StringGraphBuilder createStringGraphBuilder() {
         return StringGraphBuilderImpl.createStringGraphBuilder();
-    }
-
-    public static StringGraph createStringGraph(
-            Nodes nodes,
-            Edges edges,
-            Function<String, Properties> nodeProperties) {
-        return StringGraphImpl.createStringGraph(
-                nodes, edges, nodeProperties);
     }
 }

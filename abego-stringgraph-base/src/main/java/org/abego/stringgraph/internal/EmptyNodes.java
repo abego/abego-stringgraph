@@ -24,22 +24,34 @@
 
 package org.abego.stringgraph.internal;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.abego.stringgraph.core.Node;
+import org.abego.stringgraph.core.Nodes;
 
-// Original: https://github.com/abego/commons
-public final class SetUtil {
-    private SetUtil() {
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyIterator;
+
+class EmptyNodes implements Nodes {
+    static final Nodes EMPTY_NODES = new EmptyNodes();
+
+    @Override
+    public int getSize() {
+        return 0;
     }
 
-    @SafeVarargs
-    public static <T> Set<T> asSet(T... items) {
-        Set<T> result = new HashSet<>(items.length);
-        //noinspection ManualArrayToCollectionCopy
-        for (T e : items) {
-            //noinspection UseBulkOperation
-            result.add(e);
-        }
-        return result;
+    @Override
+    public Stream<Node> stream() {
+        return Stream.empty();
+    }
+
+    @Override
+    public Nodes intersectedWith(Nodes otherNodes) {
+        return this;
+    }
+
+    @Override
+    public Iterator<Node> iterator() {
+        return emptyIterator();
     }
 }

@@ -24,7 +24,12 @@
 
 package org.abego.stringgraph.internal;
 
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +37,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class EdgesIndexImplTest {
     @Test
     void smoketest() {
-        EdgesIndex<Integer> index = EdgesIndexImpl.createEdgesIndex(emptyMap());
+
+        Function<Set<Edge>, Edges> f = s -> {throw new UnsupportedOperationException();};
+        EdgesIndex<Integer> index = EdgesIndexImpl.createEdgesIndex(emptyMap(),f);
 
         assertEquals(0, index.edgesCount(1));
     }

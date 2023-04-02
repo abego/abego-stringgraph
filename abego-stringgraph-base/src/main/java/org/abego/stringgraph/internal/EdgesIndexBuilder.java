@@ -25,21 +25,25 @@
 package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 class EdgesIndexBuilder<K> {
+    private final Function<Set<Edge>, Edges> edgesFactory;
     private final Map<K, Set<Edge>> map = new HashMap<>();
     private boolean building = true;
 
-    private EdgesIndexBuilder() {
+    private EdgesIndexBuilder(Function<Set<Edge>, Edges> edgesFactory) {
+        this.edgesFactory = edgesFactory;
     }
 
-    public static <K> EdgesIndexBuilder<K> createEdgesIndexBuilder() {
-        return new EdgesIndexBuilder<>();
+    public static <K> EdgesIndexBuilder<K> createEdgesIndexBuilder(Function<Set<Edge>, Edges> edgesFactory) {
+        return new EdgesIndexBuilder<>(edgesFactory);
     }
 
     public void add(K key, Edge edge) {
@@ -51,6 +55,6 @@ class EdgesIndexBuilder<K> {
             throw new IllegalStateException("Must call `build()` only once.");
         }
         building = false;
-        return EdgesIndexImpl.createEdgesIndex(map);
+        return EdgesIndexImpl.createEdgesIndex(map, edgesFactory);
     }
 }

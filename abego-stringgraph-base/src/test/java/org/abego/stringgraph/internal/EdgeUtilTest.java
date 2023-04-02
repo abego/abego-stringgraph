@@ -26,9 +26,8 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
+import org.abego.stringgraph.core.StringGraphBuilder;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,18 +36,18 @@ class EdgeUtilTest {
     private final static Edges EDGES_TO_SORT = createEdgesToSort();
 
     private static Edges createEdgesToSort() {
-        HashSet<Edge> items = new HashSet<>();
-        items.add(EdgeImpl.createEdge("a", "c", "b"));
-        items.add(EdgeImpl.createEdge("", "c", "b"));
-        items.add(EdgeImpl.createEdge("a", "c", ""));
-        items.add(EdgeImpl.createEdge("a", "", "b"));
-        items.add(EdgeImpl.createEdge("a", "b", "b"));
-        items.add(EdgeImpl.createEdge("a", "a", "b"));
-        items.add(EdgeImpl.createEdge("a", "a", "a"));
-        items.add(EdgeImpl.createEdge("b", "", "a"));
-        items.add(EdgeImpl.createEdge("b", "", "b"));
-        items.add(EdgeImpl.createEdge("b", "c", "b"));
-        return EdgesImpl.createEdges(items);
+        StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
+        builder.addEdge("a", "c", "b");
+        builder.addEdge("", "c", "b");
+        builder.addEdge("a", "c", "");
+        builder.addEdge("a", "", "b");
+        builder.addEdge("a", "b", "b");
+        builder.addEdge("a", "a", "b");
+        builder.addEdge("a", "a", "a");
+        builder.addEdge("b", "", "a");
+        builder.addEdge("b", "", "b");
+        builder.addEdge("b", "c", "b");
+        return builder.build().edges();
     }
 
     @Test

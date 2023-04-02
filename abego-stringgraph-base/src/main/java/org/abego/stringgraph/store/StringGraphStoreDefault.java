@@ -24,9 +24,10 @@
 
 package org.abego.stringgraph.store;
 
-import org.abego.stringgraph.core.NoSuchPropertyException;
-import org.abego.stringgraph.internal.EdgeUtil;
 import org.abego.stringgraph.internal.FileUtil;
+import org.abego.stringgraph.internal.StringGraphData;
+import org.abego.stringgraph.internal.StringGraphDataProviderImpl;
+import org.abego.stringgraph.internal.StringGraphImpl;
 import org.abego.stringgraph.internal.VLQUtil;
 import org.abego.stringpool.StringPool;
 import org.abego.stringpool.StringPoolBuilder;
@@ -38,10 +39,7 @@ import org.abego.stringgraph.core.Nodes;
 import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.Property;
 import org.abego.stringgraph.core.StringGraph;
-import org.abego.stringgraph.core.StringGraphBuilder;
 import org.abego.stringgraph.core.StringGraphConstructing;
-import org.abego.stringgraph.core.StringGraphs;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;
 import java.io.ObjectInputStream;
@@ -50,16 +48,8 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.abego.stringgraph.internal.EdgeUtil.calcEdgeText;
-import static org.abego.stringgraph.internal.PropertiesImpl.EMPTY_PROPERTIES;
-import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
+import static org.abego.stringgraph.internal.StringGraphData.createStringGraphData;
 
 class StringGraphStoreDefault implements StringGraphStore {
     //region FieldsState
@@ -107,11 +97,8 @@ class StringGraphStoreDefault implements StringGraphStore {
 
     @Override
     public StringGraph readStringGraph() {
-        StringGraphBuilder graphBuilder = StringGraphs.createStringGraphBuilder();
-
-        readStringGraph(graphBuilder);
-
-        return graphBuilder.build();
+        StringGraphData stringGraphData = readStringGraphData();
+        return StringGraphImpl.createStringGraph(stringGraphData);
     }
 
     private StringGraphData readStringGraphData() {
@@ -158,130 +145,82 @@ class StringGraphStoreDefault implements StringGraphStore {
 
     // package-private, not private, for white-box tests
     StringGraphData readStringGraphDataFromStream(ObjectInputStream objectInputStream) {
-        StringGraphData stringGraphData = new StringGraphData();
-        stringGraphData.read(objectInputStream);
-        return stringGraphData;
+        StringGraphStoreUtil.readAndCheckDataFormat(
+                objectInputStream, getDataFormatName(), DATA_FORMAT_VERSION);
+
+        Map<Integer, int[]> props = new HashMap<>();
+        int[] nodesIDs = new int[0];
+        int[] edgesIDs = new int[0];
+        do {
+            String tag = readTag(objectInputStream);
+            switch (tag) {
+                case NODES_TAG:
+                    nodesIDs = readNodesBlock(objectInputStream);
+                    break;
+                case EDGES_TAG:
+                    edgesIDs = readEdgesBlock(objectInputStream);
+                    break;
+                case NODE_PROPERTIES_TAG:
+                    props = readNodePropertiesBlock(objectInputStream);
+                    break;
+                case END_TAG:
+                    StringPool strings = readEndBlock(objectInputStream);
+                    return createStringGraphData(new StringGraphDataProviderImpl(
+                            props, nodesIDs, edgesIDs, strings));
+                default:
+                    // to be able to read future file formats
+                    // we ignore any tag we don't know.
+                    // Future versions of this class will ensure to increase the
+                    // major version number when the file format changes in a
+                    // way that are incompatible to this approach.
+                    break;
+            }
+        } while (true);
     }
-    
-    //region Reading Blocks
-    private class StringGraphData {
-        private final Map<Integer, int[]> props = new HashMap<>();
-        private int[] nodesIDs = new int[0];
-        private int[] edgesIDs = new int[0];
-        @Nullable
-        private StringPool strings;
 
-        private void readNodesBlock(ObjectInputStream objectInputStream) {
-            int n = readInt(objectInputStream);
-            nodesIDs = new int[n];
-            for (int i = 0; i < n; i++) {
-                nodesIDs[i] = readInt(objectInputStream);
-            }
+    private int[] readNodesBlock(ObjectInputStream objectInputStream) {
+        int n = readInt(objectInputStream);
+        int[] nodesIDs = new int[n];
+        for (int i = 0; i < n; i++) {
+            nodesIDs[i] = readInt(objectInputStream);
         }
+        return nodesIDs;
+    }
 
-        private void read(ObjectInputStream objectInputStream) {
-            StringGraphStoreUtil.readAndCheckDataFormat(
-                    objectInputStream, getDataFormatName(), DATA_FORMAT_VERSION);
-
-            boolean fileEndReached = false;
-            do {
-                String tag = readTag(objectInputStream);
-                switch (tag) {
-                    case NODES_TAG:
-                        readNodesBlock(objectInputStream);
-                        break;
-                    case EDGES_TAG:
-                        readEdgesBlock(objectInputStream);
-                        break;
-                    case NODE_PROPERTIES_TAG:
-                        readNodePropertiesBlock(objectInputStream);
-                        break;
-                    case END_TAG:
-                        readEndBlock(objectInputStream);
-                        fileEndReached = true;
-                        break;
-                    default:
-                        // to be able to read future file formats
-                        // we ignore any tag we don't know.
-                        // Future versions of this class will ensure to increase the
-                        // major version number when the file format changes in a
-                        // way that are incompatible to this approach.
-                        break;
-                }
-            } while (!fileEndReached);
+    private int[] readEdgesBlock(ObjectInputStream objectInputStream) {
+        int n = readInt(objectInputStream);
+        int size = n * 3;
+        int[] edgesIDs = new int[size];
+        for (int i = 0; i < size; i += 3) {
+            edgesIDs[i] = readInt(objectInputStream);
+            edgesIDs[i + 1] = readInt(objectInputStream);
+            edgesIDs[i + 2] = readInt(objectInputStream);
         }
+        return edgesIDs;
+    }
 
-        private void readEdgesBlock(ObjectInputStream objectInputStream) {
-            int n = readInt(objectInputStream);
-            int size = n * 3;
-            edgesIDs = new int[size];
-            for (int i = 0; i < size; i += 3) {
-                edgesIDs[i] = readInt(objectInputStream);
-                edgesIDs[i + 1] = readInt(objectInputStream);
-                edgesIDs[i + 2] = readInt(objectInputStream);
+    private Map<Integer, int[]> readNodePropertiesBlock(ObjectInputStream objectInputStream) {
+        Map<Integer, int[]> props = new HashMap<>();
+        int countOfNodesWithProps = readInt(objectInputStream);
+        for (int iNode = 0; iNode < countOfNodesWithProps; iNode++) {
+            int nodeID = readInt(objectInputStream);
+            int nProps = readInt(objectInputStream);
+            int[] propsIDs = new int[nProps * 2];
+            for (int i = 0; i < nProps; i++) {
+                propsIDs[2 * i] = readInt(objectInputStream);
+                propsIDs[2 * i + 1] = readInt(objectInputStream);
             }
+            props.put(nodeID, propsIDs);
         }
+        return props;
+    }
 
-        private void readNodePropertiesBlock(ObjectInputStream objectInputStream) {
-            int countOfNodesWithProps = readInt(objectInputStream);
-            for (int iNode = 0; iNode < countOfNodesWithProps; iNode++) {
-                int nodeID = readInt(objectInputStream);
-                int nProps = readInt(objectInputStream);
-                int[] propsIDs = new int[nProps * 2];
-                for (int i = 0; i < nProps; i++) {
-                    propsIDs[2 * i] = readInt(objectInputStream);
-                    propsIDs[2 * i + 1] = readInt(objectInputStream);
-                }
-                props.put(nodeID, propsIDs);
-            }
-        }
-
-        // package-private, not private, for white-box tests
-        private void readEndBlock(ObjectInputStream objectInputStream) {
-            // read the strings
-            int len = readInt(objectInputStream);
-            byte[] bytes = readBytes(objectInputStream, len);
-            strings = StringPools.newStringPool(bytes);
-        }
-
-        public void addNodes(StringGraphConstructing graphConstructing) {
-            if (strings == null) {
-                throw new IllegalStateException("No strings loaded");
-            }
-            for (int nodesID : nodesIDs) {
-                graphConstructing.addNode(strings.getString(nodesID));
-            }
-        }
-
-        public void addEdges(StringGraphConstructing graphConstructing) {
-            if (strings == null) {
-                throw new IllegalStateException("No strings loaded");
-            }
-            int n = edgesIDs.length;
-            for (int i = 0; i < n; i += 3) {
-                graphConstructing.addEdge(
-                        strings.getString(edgesIDs[i]),
-                        strings.getString(edgesIDs[i + 2]), strings.getString(edgesIDs[i + 1])
-                );
-            }
-        }
-
-        public void addProps(StringGraphConstructing graphConstructing) {
-            if (strings == null) {
-                throw new IllegalStateException("No strings loaded");
-            }
-            for (Map.Entry<Integer, int[]> e : props.entrySet()) {
-                int nodeID = e.getKey();
-                int[] propsIDs = e.getValue();
-                int n = propsIDs.length / 2;
-                for (int i = 0; i < n; i++) {
-                    graphConstructing.setNodeProperty(
-                            strings.getString(nodeID),
-                            strings.getString(propsIDs[2 * i]),
-                            strings.getString(propsIDs[2 * i + 1]));
-                }
-            }
-        }
+    // package-private, not private, for white-box tests
+    private StringPool readEndBlock(ObjectInputStream objectInputStream) {
+        // read the strings
+        int len = readInt(objectInputStream);
+        byte[] bytes = readBytes(objectInputStream, len);
+        return StringPools.newStringPool(bytes);
     }
 
     //endregion

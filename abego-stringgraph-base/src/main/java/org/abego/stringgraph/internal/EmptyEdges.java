@@ -24,57 +24,62 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.Node;
-import org.eclipse.jdt.annotation.Nullable;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
 
-import java.util.Objects;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
+import static java.util.Collections.emptyIterator;
+import static java.util.Collections.emptyList;
 
-class NodeImpl implements Node {
-    private final String id;
+class EmptyEdges implements Edges {
+    public static Edges EMPTY_EDGES = new EmptyEdges();
 
-    private NodeImpl(String id) {
-        this.id = id;
-    }
-
-    public static Node createNode(String id) {
-        return new NodeImpl(id);
+    @Override
+    public int getSize() {
+        return 0;
     }
 
     @Override
-    public String id() {
-        return id;
+    public boolean contains(Edge edge) {
+        return false;
     }
 
     @Override
-    public String getText() {
-        return quotedIfNeeded(id());
+    public boolean contains(String fromNode, String label, String toNode) {
+        return false;
     }
 
     @Override
-    public int compareTo(Node o) {
-        return id.compareTo(o.id());
-    }
-    
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NodeImpl node = (NodeImpl) o;
-        return id.equals(node.id);
+    public Stream<Edge> stream() {
+        return Stream.empty();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public Edges filtered(Predicate<Edge> edgePredicate) {
+        return this;
     }
 
     @Override
-    public String toString() {
-        return "NodeImpl{" +
-                "id='" + id + '\'' +
-                '}';
+    public Edges intersected(Edges otherEdges) {
+        return this;
     }
-    
+
+    @Override
+    public Iterable<Edge> sorted(Comparator<? super Edge> comparator) {
+        return emptyList();
+    }
+
+    @Override
+    public Iterable<Edge> sorted() {
+        return emptyList();
+    }
+
+    @Override
+    public Iterator<Edge> iterator() {
+        return emptyIterator();
+    }
 }

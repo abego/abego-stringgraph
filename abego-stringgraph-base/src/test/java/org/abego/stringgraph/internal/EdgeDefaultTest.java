@@ -26,6 +26,7 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
+import org.abego.stringgraph.core.StringGraphBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.stringgraph.core.NodeTest.assertNodeEquals;
@@ -35,7 +36,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class EdgeDefaultTest {
 
     public static Edge getEdgeSample() {
-        return EdgeImpl.createEdge("f", "lbl", "t");
+        return getTwoEdgeSamples()[0];
+    }
+    
+    public static Edge[] getTwoEdgeSamples() {
+        StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
+        builder.addEdge("f", "lbl", "t");
+        builder.addEdge("x", "z", "y");
+        return builder.build().edges().stream().sorted().toArray(Edge[]::new);
     }
 
     /**
@@ -84,28 +92,27 @@ public class EdgeDefaultTest {
 
     @Test
     void testEquals() {
-        Edge edge = getEdgeSample();
-        Edge edgeDuplicate = EdgeImpl.createEdge("f", "lbl", "t");
-        Edge otherEdge = EdgeImpl.createEdge("x", "z", "y");
+        Edge[] edges = getTwoEdgeSamples();
+        Edge edge = edges[0];
+        Edge otherEdge = edges[1];
 
         assertEquals(edge, edge);
-        assertEquals(edge, edgeDuplicate);
         assertNotEquals(edge, otherEdge);
         assertNotEquals(edge, null);
     }
 
     @Test
     void testHashCode() {
-        Edge edge = getEdgeSample();
+        Edge[] edges = getTwoEdgeSamples();
 
-        assertNotEquals(0, edge.hashCode());
+        assertNotEquals(edges[0].hashCode(), edges[1].hashCode());
     }
 
     @Test
     void testToString() {
         Edge edge = getEdgeSample();
 
-        assertEquals("EdgeDefault{fromNode=\"f\", label=\"lbl\", toNode=\"t\"}", edge.toString());
+        assertEquals("MyEdge{fromNode=\"f\", label=\"lbl\", toNode=\"t\"}", edge.toString());
     }
 
 }

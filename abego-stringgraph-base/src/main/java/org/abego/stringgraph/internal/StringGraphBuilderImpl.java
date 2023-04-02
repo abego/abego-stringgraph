@@ -24,25 +24,53 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.Edge;
-import org.abego.stringgraph.core.Node;
-import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphBuilder;
 import org.abego.stringgraph.core.StringGraphException;
+import org.abego.stringpool.StringPool;
+import org.abego.stringpool.StringPoolBuilder;
+import org.abego.stringpool.StringPools;
+import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 
-import static org.abego.stringgraph.internal.StringGraphImpl.asNode;
+import static org.abego.stringgraph.internal.StringGraphData.createStringGraphData;
 
 public final class StringGraphBuilderImpl implements StringGraphBuilder {
-    private final Set<Node> nodes = new HashSet<>();
-    private final Set<Edge> edges = new HashSet<>();
-    private final Map<String, Map<String, String>> nodeProperties = new HashMap<>();
+    private static class EdgeData {
+        final int fromId;
+        final int toId;
+        final int labelId;
+
+        EdgeData(int fromId, int toId, int labelId) {
+            this.fromId = fromId;
+            this.toId = toId;
+            this.labelId = labelId;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EdgeData edgeData = (EdgeData) o;
+            return fromId == edgeData.fromId && toId == edgeData.toId && labelId == edgeData.labelId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fromId, toId, labelId);
+        }
+    }
+
+    private final StringPoolBuilder stringPoolBuilder = StringPools.builder();
+    private final Set<Integer> nodes = new HashSet<>();
+    private final Set<EdgeData> edges = new HashSet<>();
+    private final Map<Integer, Map<Integer, Integer>> nodeProperties = new HashMap<>();
 
     private StringGraphBuilderImpl() {
     }
@@ -51,53 +79,73 @@ public final class StringGraphBuilderImpl implements StringGraphBuilder {
         return new StringGraphBuilderImpl();
     }
 
-    public Set<Node> getNodes() {
-        return nodes;
-    }
-
-    public Set<Edge> getEdges() {
-        return edges;
-    }
-
-    private Function<String, Properties> getNodeProperties() {
-        return node -> {
-            Map<String, String> map = nodeProperties.get(node);
-            return map != null ? PropertiesImpl.createProperties(map) : PropertiesImpl.EMPTY_PROPERTIES;
-        };
-    }
-
     @Override
     public void addNode(String node) {
-        nodes.add(asNode(node));
+        nodes.add(stringPoolBuilder.add(node));
     }
 
     @Override
     public void addEdge(String fromNode, String edgeLabel, String toNode) {
-        addNode(fromNode);
-        addNode(toNode);
-        edges.add(newEdge(fromNode, edgeLabel, toNode));
+        int fromId = stringPoolBuilder.add(fromNode);
+        int toId = stringPoolBuilder.add(toNode);
+        int labelId = stringPoolBuilder.add(edgeLabel);
+        nodes.add(fromId);
+        nodes.add(toId);
+        edges.add(new EdgeData(fromId, toId, labelId));
     }
 
     @Override
     public void setNodeProperty(String node, String name, String value) {
-        if (!nodes.contains(asNode(node))) {
+        if (!stringPoolBuilder.contains(node)) {
             throw new StringGraphException(String.format(
                     "Error when setting node property. Node does not exist: %s", node));
         }
-        nodeProperties.computeIfAbsent(node, k -> new HashMap<>())
-                .put(name, value);
+        nodeProperties.computeIfAbsent(stringPoolBuilder.add(node), k -> new HashMap<>())
+                .put(stringPoolBuilder.add(name), stringPoolBuilder.add(value));
     }
 
     @Override
     public StringGraph build() {
-        return StringGraphImpl.createStringGraph(
-                NodesImpl.createNodes(getNodes()),
-                EdgesImpl.createEdges(getEdges()),
-                getNodeProperties());
+        int[] nodesIds = toIntArray(nodes);
+        int[] edgesIds = toFlatIntArray(edges);
+        Map<Integer, int[]> props = toIntegerIntArrayMap(nodeProperties);
+        StringPool strings = stringPoolBuilder.build();
+        StringGraphData data = createStringGraphData(
+                new StringGraphDataProviderImpl(
+                        props, nodesIds, edgesIds, strings));
+
+        return StringGraphImpl.createStringGraph(data);
     }
 
-    private Edge newEdge(String fromNode, String edgeLabel, String toNode) {
-        return EdgeImpl.createEdge(asNode(fromNode), edgeLabel, asNode(toNode));
+    private static int[] toFlatIntArray(Collection<EdgeData> edgeDatas) {
+        int count = edgeDatas.size();
+        int[] result = new int[count * 3];
+        int offset = 0;
+        for (EdgeData e : edgeDatas) {
+            result[offset++] = e.fromId;
+            result[offset++] = e.toId;
+            result[offset++] = e.labelId;
+        }
+        return result;
     }
 
+    private static int[] toIntArray(Collection<Integer> integers) {
+        return integers.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private static Map<Integer, int[]> toIntegerIntArrayMap(
+            Map<Integer, Map<Integer, Integer>> integerMapMap) {
+        Map<Integer, int[]> props = new HashMap<>();
+        for (Map.Entry<Integer, Map<Integer, Integer>> e : integerMapMap.entrySet()) {
+            Set<Map.Entry<Integer, Integer>> ps = e.getValue().entrySet();
+            int[] array = new int[ps.size() * 2];
+            int offset2 = 0;
+            for (Map.Entry<Integer, Integer> e2 : ps) {
+                array[offset2++] = e2.getKey();
+                array[offset2++] = e2.getValue();
+            }
+            props.put(e.getKey(), array);
+        }
+        return props;
+    }
 }

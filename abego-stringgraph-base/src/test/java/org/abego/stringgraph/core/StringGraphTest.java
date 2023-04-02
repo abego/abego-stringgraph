@@ -555,8 +555,11 @@ public class StringGraphTest {
         assertNotEquals(sample1, "not a graph");
         assertNotEquals(sample1, null);
         assertEquals(sample1, sample1);
-        assertEquals(sample1, otherSample1);
-        assertEquals(h1, h2);
+        
+        // comparing StringGraph will not compare the content, i.e. even with
+        // same content two StringGraphs will be different (if no identical).
+        assertNotEquals(sample1, otherSample1);
+        assertNotEquals(h1, h2);
     }
 
     @ParameterizedTest
@@ -651,7 +654,7 @@ public class StringGraphTest {
         // Property
 
         // ... toString
-        assertEquals("PropertyImpl{name='prop1', value='foo'}", prop1OfA.toString());
+        assertEquals("MyProperty{name=\"prop1\", value=\"foo\"}", prop1OfA.toString());
 
         // ... equals/hashCode
         assertNotEquals(prop1OfA, prop2OfA);
@@ -671,16 +674,19 @@ public class StringGraphTest {
 
         // ... iterator
         StringBuilder sb = new StringBuilder();
-        for (Property p : ps) {
+        ps.stream().sorted().forEach(p-> {
             sb.append(p.getName());
             sb.append("=");
             sb.append(p.getValue());
             sb.append(";");
-        }
+        });
         assertEquals("prop1=foo;prop2=bar;", sb.toString());
         // ... iterator (next)
         assertThrows(NoSuchElementException.class, () ->
                 graph.getNodeProperties("noNode").iterator().next());
+        
+        // ... stream
+        assertEquals(2,ps.stream().count());
     }
 
     @Test
@@ -750,6 +756,9 @@ public class StringGraphTest {
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
         e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleNodeId);
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
+        
+        Node n = oneNode.singleNode();
+        assertEquals("MyNode{id=\"A\"}",n.toString());
     }
 
     @Test

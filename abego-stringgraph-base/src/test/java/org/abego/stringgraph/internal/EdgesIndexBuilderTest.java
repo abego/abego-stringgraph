@@ -24,55 +24,26 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.EdgeLabels;
-import org.eclipse.jdt.annotation.Nullable;
+import org.abego.stringgraph.core.Edge;
+import org.abego.stringgraph.core.Edges;
+import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Stream;
+import java.util.function.Function;
 
-import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EdgeLabelsImpl implements EdgeLabels {
-    public static final EdgeLabels EMPTY_EDGE_LABELS =
-            createEdgeLabels(emptySet());
-    
-    private final Set<String> items;
+class EdgesIndexBuilderTest {
 
-    private EdgeLabelsImpl(Set<String> items) {
-        this.items = items;
-    }
+    @Test
+    void callBuildOnlyOnce() {
+        Function<Set<Edge>, Edges> f = s -> {
+            throw new UnsupportedOperationException();
+        };
+        EdgesIndexBuilder<String> builder = EdgesIndexBuilder.createEdgesIndexBuilder(f);
 
-    public static EdgeLabels createEdgeLabels(Set<String> items) {
-        return new EdgeLabelsImpl(items);
-    }
-
-    @Override
-    public int getSize() {
-        return items.size();
-    }
-
-    @Override
-    public Stream<String> stream() {
-        return items.stream();
-    }
-
-    @Override
-    public Iterator<String> iterator() {
-        return items.iterator();
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EdgeLabelsImpl strings = (EdgeLabelsImpl) o;
-        return items.equals(strings.items);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(items);
+        builder.build();
+        IllegalStateException e = assertThrows(IllegalStateException.class, builder::build);
+        assertEquals("Must call `build()` only once.", e.getMessage());
     }
 }

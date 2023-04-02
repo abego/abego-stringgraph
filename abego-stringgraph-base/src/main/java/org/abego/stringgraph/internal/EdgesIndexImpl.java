@@ -30,16 +30,19 @@ import org.abego.stringgraph.core.Edges;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 class EdgesIndexImpl<K> implements EdgesIndex<K> {
     private final Map<K, Set<Edge>> map;
+    private final Function<Set<Edge>,Edges> edgesFactory;
 
-    private EdgesIndexImpl(Map<K, Set<Edge>> map) {
+    private EdgesIndexImpl(Map<K, Set<Edge>> map, Function<Set<Edge>, Edges> edgesFactory) {
         this.map = map;
+        this.edgesFactory = edgesFactory;
     }
 
-    public static <K> EdgesIndex<K> createEdgesIndex(Map<K, Set<Edge>> map) {
-        return new EdgesIndexImpl<>(map);
+    public static <K> EdgesIndex<K> createEdgesIndex(Map<K, Set<Edge>> map, Function<Set<Edge>, Edges> edgesFactory) {
+        return new EdgesIndexImpl<>(map, edgesFactory);
     }
 
     @Override
@@ -51,7 +54,7 @@ class EdgesIndexImpl<K> implements EdgesIndex<K> {
     @Override
     public Edges edges(K key) {
         Set<Edge> edges = map.get(key);
-        return EdgesImpl.createEdges(
+        return edgesFactory.apply(
                 edges == null ? Collections.emptySet() : edges);
     }
 
