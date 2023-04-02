@@ -35,7 +35,6 @@ import org.abego.stringgraph.core.StringGraphConstructing;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -115,6 +114,7 @@ public class StringGraphData {
 
     private class MyNodes implements Nodes {
         private final int[] nodesIDs;
+        private boolean isSorted = false;
 
         private MyNodes(int[] nodesIDs) {
             this.nodesIDs = nodesIDs;
@@ -131,42 +131,52 @@ public class StringGraphData {
         }
 
         @Override
-        public Nodes intersectedWith(Nodes otherNodes) {
-            // also: More efficient implementation may be possible,
+        public Nodes intersected(Nodes otherNodes) {
             if (otherNodes == this) {
                 return this;
             }
 
-            int nA = getSize();
-            int nB = otherNodes.getSize();
-
-            Set<Node> setOfNodes;
-            Nodes nodesToCheck;
-            if (nA >= nB) {
-                setOfNodes = stream().collect(Collectors.toSet());
-                nodesToCheck = otherNodes;
-            } else {
-                setOfNodes = otherNodes.stream()
-                        .collect(Collectors.toSet());
-                nodesToCheck = this;
+            // sort both id arrays
+            int[] a = sortedIds();
+            int[] b = asMyNodes(otherNodes).sortedIds();
+            // compare the items of both id arrays and add all ids that are
+            // in both array to the buffer array
+            int nA = a.length;
+            int nB = b.length;
+            int maxResultSize = Math.min(nA, nB);
+            int[] buffer = new int[maxResultSize];
+            int iBuffer = 0;
+            int iA = 0;
+            int iB = 0;
+            while (iA < nA && iB < nB) {
+                int vA = a[iA];
+                int vB = b[iB];
+                if (vA == vB) {
+                    buffer[iBuffer++] = vA;
+                    iA++;
+                    iB++;
+                } else if (vA > vB) {
+                    //noinspection StatementWithEmptyBody
+                    while (++iB < nB && vA > b[iB]) {
+                        // empty by intend
+                    }
+                } else {
+                    // vB > vA
+                    //noinspection StatementWithEmptyBody
+                    while (++iA < nA && vB > a[iA]) {
+                        // empty by intend
+                    }
+                }
             }
-            Set<Node> result = nodesToCheck.stream()
-                    .filter(setOfNodes::contains)
-                    .collect(Collectors.toSet());
-            return createMyNodes(result);
+            return new MyNodes(Arrays.copyOf(buffer, iBuffer));
         }
 
-        private MyNodes createMyNodes(Collection<Node> result) {
-            int n = result.size();
-            int[] resultIds = new int[n];
-            int i = 0;
-            for (Node node : result) {
-                if (!(node instanceof MyNode)) {
-                    throw new IllegalArgumentException("Unexpected Node implementation: " + node.getClass());
-                }
-                resultIds[i++] = ((MyNode) node).id;
+        private int[] sortedIds() {
+            if (!isSorted) {
+                Arrays.sort(nodesIDs);
+                isSorted = true;
             }
-            return new MyNodes(resultIds);
+            return nodesIDs;
         }
 
         @Override
@@ -602,6 +612,13 @@ public class StringGraphData {
             throw new IllegalArgumentException("MyEdges expected, got " + edges.getClass());
         }
         return (MyEdges) edges;
+    }
+
+    private static MyNodes asMyNodes(Nodes nodes) {
+        if (!(nodes instanceof MyNodes)) {
+            throw new IllegalArgumentException("MyNodes expected, got " + nodes.getClass());
+        }
+        return (MyNodes) nodes;
     }
 
     public Nodes fromNodeOfEdgesWithLabel(Edges edges, String edgeLabel) {

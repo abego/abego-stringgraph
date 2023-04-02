@@ -46,7 +46,7 @@ class EmptyNodes implements Nodes {
     }
 
     @Override
-    public Nodes intersectedWith(Nodes otherNodes) {
+    public Nodes intersected(Nodes otherNodes) {
         return this;
     }
 
