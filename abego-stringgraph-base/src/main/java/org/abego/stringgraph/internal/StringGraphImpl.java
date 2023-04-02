@@ -38,6 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -285,12 +286,14 @@ public class StringGraphImpl implements StringGraph {
 
     @Override
     public Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode) {
-        return selectNodes(toNode, 
-                edgesIndexForToNode::edges, 
-                e -> e.getLabel().equals(edgeLabel), 
-                Edge::getFromNode);
+        try {
+            Edges edges = edgesIndexForToNode.edges(asNode(toNode));
+            return data.fromNodeOfEdgesWithLabel(edges, edgeLabel);
+        } catch(NoSuchElementException e) {
+            return EmptyNodes.EMPTY_NODES;
+        }
     }
-    
+
     @Override
     public Edges edgesWith(Predicate<Edge> edgePredicate) {
         return edges().filtered(edgePredicate);
@@ -336,7 +339,7 @@ public class StringGraphImpl implements StringGraph {
     }
 
     /**
-     * Uses the {@code edgeCondition} to filter all edges returned by the 
+     * Uses the {@code edgeCondition} to filter all edges returned by the
      * edgesProvider applied on the Node identified by the {@code nodeId} and
      * returns all nodes from those filtered edges selected through the
      * {@code nodeSelect} function, or no nodes, when {@code nodeId} does not

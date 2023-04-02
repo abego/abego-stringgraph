@@ -28,6 +28,7 @@ import org.abego.stringpool.StringPool;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -37,6 +38,13 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
     private final int[] nodesIDs;
     private final int[] edgesIDs;
     private final StringPool strings;
+    /**
+     * Reading Strings from the StringPool is "slow" as the strings are encoded
+     * every time. So cache the previously retrieved strings by their ID.
+     */
+    private final Map<Integer, String> cachedStrings = new HashMap<>();
+    @Nullable
+    private Map<String, Integer> stringIds;
 
     public StringGraphDataProviderImpl(Map<Integer, int[]> props, int[] nodesIDs, int[] edgesIDs, StringPool strings) {
         this.props = props;
@@ -83,7 +91,7 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
 
     @Override
     public String getString(int id) {
-        return strings.getString(id);
+        return cachedStrings.computeIfAbsent(id, strings::getString);
     }
 
     @Override
@@ -97,13 +105,8 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
 
     @Override
     public int getStringIdOrZero(String stringText) {
-        //TODO make this more efficient
-        for (StringPool.StringAndID e : strings.allStringAndIDs()) {
-            if (e.getString().equals(stringText)) {
-                return e.getID();
-            }
-        }
-        return 0;
+        Integer result = getStringIds().get(stringText);
+        return result != null ? result : 0;
     }
 
     @Override
@@ -120,5 +123,15 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
         result = 31 * result + Arrays.hashCode(nodesIDs);
         result = 31 * result + Arrays.hashCode(edgesIDs);
         return result;
+    }
+
+    private Map<String, Integer> getStringIds() {
+        if (stringIds == null) {
+            stringIds = new HashMap<>();
+            for (StringPool.StringAndID e : strings.allStringAndIDs()) {
+                stringIds.put(e.getString(), e.getID());
+            }
+        }
+        return stringIds;
     }
 }
