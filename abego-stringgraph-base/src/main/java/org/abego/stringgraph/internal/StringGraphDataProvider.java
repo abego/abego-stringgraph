@@ -28,6 +28,17 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Map;
 
+/**
+ * Provides "raw" data of a StringGraph, mainly using {@code int} values to
+ * identify nodes, edges, labels etc. .
+ * <p>
+ * Instead of working directly on {@code String} objects most methods use 
+ * {@code int} values ('id') to identify the string value (and hence the Node, 
+ * Edge label, Property name or value). The string value for an {@code int} can 
+ * then be retrieved through the {@link #getString(int)} method. For a given
+ * String the method {@link #getStringId(String)} returns its {@code int} value/
+ * id.
+ */
 public interface StringGraphDataProvider {
     /**
      * Returns the (numeric) ids of all nodes. 
