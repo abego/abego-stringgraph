@@ -552,7 +552,7 @@ public class StringGraphData {
         return new StringGraphData(provider);
     }
     
-    public Nodes createNodes(Set<Node> nodes) {
+    public Nodes asNodes(Set<Node> nodes) {
         if (nodes.isEmpty()) {
             return EMPTY_NODES;
         }

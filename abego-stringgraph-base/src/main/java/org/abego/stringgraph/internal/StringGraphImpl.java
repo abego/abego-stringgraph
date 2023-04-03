@@ -114,12 +114,12 @@ public class StringGraphImpl implements StringGraph {
             case 1 + 3 * 1 + 9 * 0: // "ABC", "lab", "?"
                 return nodesFromNodeViaEdgeLabeled(fromPattern, labelPattern);
             case 0 + 3 * 1 + 9 * 2: // "?", "lab", null
-                return createNodes(
+                return asNodes(
                         data.edgesIndexForLabel.edges(labelPattern).stream()
                                 .map(Edge::getFromNode)
                                 .collect(Collectors.toSet()));
             case 2 + 3 * 1 + 9 * 0: // null, "lab", "?"
-                return createNodes(
+                return asNodes(
                         data.edgesIndexForLabel.edges(labelPattern).stream()
                                 .map(Edge::getToNode)
                                 .collect(Collectors.toSet()));
@@ -129,7 +129,7 @@ public class StringGraphImpl implements StringGraph {
                     nodes.add(edge.getFromNode());
                     nodes.add(edge.getToNode());
                 });
-                return createNodes(nodes);
+                return asNodes(nodes);
             default:
                 throw new StringGraphException(String.format(
                         "Unsupported query: (%s, %s, %s)",
@@ -302,8 +302,8 @@ public class StringGraphImpl implements StringGraph {
         return "StringGraphImpl{" + "data=" + data + '}';
     }
 
-    private Nodes createNodes(Set<Node> nodes) {
-        return data.createNodes(nodes);
+    private Nodes asNodes(Set<Node> nodes) {
+        return data.asNodes(nodes);
     }
 
     private Node asNode(String id) {
@@ -329,7 +329,7 @@ public class StringGraphImpl implements StringGraph {
 
         return valueWithNodeOrElse(
                 nodeId,
-                n -> createNodes(
+                n -> asNodes(
                         edgesProvider.apply(n).stream()
                                 .filter(edgeCondition)
                                 .map(nodeSelect)
