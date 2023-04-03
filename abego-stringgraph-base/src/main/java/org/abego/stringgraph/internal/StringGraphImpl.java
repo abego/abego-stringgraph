@@ -50,6 +50,18 @@ public class StringGraphImpl implements StringGraph {
 
     private final StringGraphData data;
 
+    private enum PatternKind {
+        QUERY,
+        BOUND,
+        NULL;
+
+        static PatternKind of(@Nullable String pattern) {
+            return pattern == null ? PatternKind.NULL :
+                    pattern.startsWith("?") ? PatternKind.QUERY :
+                            PatternKind.BOUND;
+        }
+    }
+    
     private StringGraphImpl(StringGraphData data) {
         this.data = data;
     }
@@ -68,27 +80,15 @@ public class StringGraphImpl implements StringGraph {
         return data.getNodes();
     }
 
-    private enum PatternKind {
-        QUERY,
-        BOUND,
-        NULL,
-    }
-
-    private static PatternKind patternKind(@Nullable String pattern) {
-        return pattern == null ? PatternKind.NULL :
-                pattern.startsWith("?") ? PatternKind.QUERY :
-                        PatternKind.BOUND;
-    }
-
     @Override
     @SuppressWarnings({"PointlessArithmeticExpression", "DataFlowIssue"})
     public Nodes nodes(@Nullable String fromPattern,
                        @Nullable String labelPattern,
                        @Nullable String toPattern) {
 
-        PatternKind fromKind = patternKind(fromPattern);
-        PatternKind labelKind = patternKind(labelPattern);
-        PatternKind toKind = patternKind(toPattern);
+        PatternKind fromKind = PatternKind.of(fromPattern);
+        PatternKind labelKind = PatternKind.of(labelPattern);
+        PatternKind toKind = PatternKind.of(toPattern);
 
         if (fromKind != PatternKind.QUERY && toKind != PatternKind.QUERY) {
             throw new StringGraphException(
