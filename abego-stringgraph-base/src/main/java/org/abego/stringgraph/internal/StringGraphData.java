@@ -31,7 +31,6 @@ import org.abego.stringgraph.core.Node;
 import org.abego.stringgraph.core.Nodes;
 import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.Property;
-import org.abego.stringgraph.core.StringGraphConstructing;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -588,37 +587,6 @@ public class StringGraphData {
             }
             return new MyProperties(ps);
         };
-    }
-
-    public void addNodes(StringGraphConstructing graphConstructing) {
-        for (int nodesID : provider.getNodesIds()) {
-            graphConstructing.addNode(provider.getString(nodesID));
-        }
-    }
-
-    public void addEdges(StringGraphConstructing graphConstructing) {
-        int n = provider.getEdgesCount();
-        for (int i = 0; i < n; i += 3) {
-            graphConstructing.addEdge(
-                    provider.getString(provider.getFromId(i)),
-                    provider.getString(provider.getLabelId(i)),
-                    provider.getString(provider.getToId(i))
-            );
-        }
-    }
-
-    public void addProps(StringGraphConstructing graphConstructing) {
-        for (Map.Entry<Integer, int[]> e : provider.getAllProperties()) {
-            int nodeID = e.getKey();
-            int[] propsIDs = e.getValue();
-            int n = propsIDs.length / 2;
-            for (int i = 0; i < n; i++) {
-                graphConstructing.setNodeProperty(
-                        provider.getString(nodeID),
-                        provider.getString(propsIDs[2 * i]),
-                        provider.getString(propsIDs[2 * i + 1]));
-            }
-        }
     }
 
     public Node getNode(String id) {
