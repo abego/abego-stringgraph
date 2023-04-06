@@ -42,4 +42,14 @@ final class ArrayUtil {
         }
         return result;
     }
+
+    public static int[] toIntArray(Collection<Integer> integers) {
+        int n = integers.size();
+        int[] result =new int[n];
+        int i=0;
+        for (int v:integers) {
+            result[i++] = v;
+        }
+        return result;
+    }
 }
