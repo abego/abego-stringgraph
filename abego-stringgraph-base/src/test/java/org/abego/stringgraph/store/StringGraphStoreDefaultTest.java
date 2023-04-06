@@ -84,7 +84,7 @@ class StringGraphStoreDefaultTest {
 //        assertEquals("Error when reading VLQ 'int'", ex.getMessage());
         ex =
                 assertThrows(StringGraphStoreException.class,
-                        () -> store.readStringGraphDataFromStream(stream));
+                        () -> store.readStringGraphStateFromStream(stream));
         assertEquals("Error when reading data format name", ex.getMessage());
     }
 

@@ -26,33 +26,33 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.StringGraphConstructing;
 
-public class StringGraphDataProviderUtil {
+public class StringGraphConstructingUtil {
     
     public static void constructGraph(
-            StringGraphDataProvider provider,
+            StringGraphState state,
             StringGraphConstructing graphConstructing) {
         
-        for (int nodesID : provider.getNodesIds()) {
-            graphConstructing.addNode(provider.getString(nodesID));
+        for (int nodesID : state.getNodesIds()) {
+            graphConstructing.addNode(state.getString(nodesID));
         }
 
-        int edgesCount = provider.getEdgesCount();
+        int edgesCount = state.getEdgesCount();
         for (int i = 0; i < edgesCount; i++) {
             graphConstructing.addEdge(
-                    provider.getString(provider.getFromId(i)),
-                    provider.getString(provider.getLabelId(i)),
-                    provider.getString(provider.getToId(i))
+                    state.getString(state.getFromId(i)),
+                    state.getString(state.getLabelId(i)),
+                    state.getString(state.getToId(i))
             );
         }
 
-        for (int nodeID : provider.getNodesWithProperties()) {
-            int[] propsIDs = provider.getPropertyDataForNode(nodeID);
+        for (int nodeID : state.getNodesWithProperties()) {
+            int[] propsIDs = state.getPropertyDataForNode(nodeID);
             int n = propsIDs != null ? propsIDs.length / 2 : 0;
             for (int i = 0; i < n; i++) {
                 graphConstructing.setNodeProperty(
-                        provider.getString(nodeID),
-                        provider.getString(propsIDs[2 * i]),
-                        provider.getString(propsIDs[2 * i + 1]));
+                        state.getString(nodeID),
+                        state.getString(propsIDs[2 * i]),
+                        state.getString(propsIDs[2 * i + 1]));
             }
         }
     }

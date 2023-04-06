@@ -39,7 +39,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.abego.stringgraph.internal.StringGraphData.createStringGraphData;
+import static org.abego.stringgraph.internal.ArrayUtil.toIntArray;
+
 
 public final class StringGraphBuilderImpl implements StringGraphBuilder {
     private static class EdgeData {
@@ -106,15 +107,16 @@ public final class StringGraphBuilderImpl implements StringGraphBuilder {
 
     @Override
     public StringGraph build() {
+        StringGraphState state = buildStringGraphState();
+        return StringGraphImpl.createStringGraph(state);
+    }
+
+    public StringGraphState buildStringGraphState() {
         int[] nodesIds = toIntArray(nodes);
         int[] edgesIds = toFlatIntArray(edges);
         Map<Integer, int[]> props = toIntegerIntArrayMap(nodeProperties);
         StringPool strings = stringPoolBuilder.build();
-        StringGraphData data = createStringGraphData(
-                new StringGraphDataProviderImpl(
-                        props, nodesIds, edgesIds, strings));
-
-        return StringGraphImpl.createStringGraph(data);
+        return new StringGraphStateImpl(props, nodesIds, edgesIds, strings);
     }
 
     private static int[] toFlatIntArray(Collection<EdgeData> edgeDatas) {
@@ -129,20 +131,16 @@ public final class StringGraphBuilderImpl implements StringGraphBuilder {
         return result;
     }
 
-    private static int[] toIntArray(Collection<Integer> integers) {
-        return integers.stream().mapToInt(Integer::intValue).toArray();
-    }
-
     private static Map<Integer, int[]> toIntegerIntArrayMap(
             Map<Integer, Map<Integer, Integer>> integerMapMap) {
         Map<Integer, int[]> props = new HashMap<>();
         for (Map.Entry<Integer, Map<Integer, Integer>> e : integerMapMap.entrySet()) {
             Set<Map.Entry<Integer, Integer>> ps = e.getValue().entrySet();
             int[] array = new int[ps.size() * 2];
-            int offset2 = 0;
+            int offset = 0;
             for (Map.Entry<Integer, Integer> e2 : ps) {
-                array[offset2++] = e2.getKey();
-                array[offset2++] = e2.getValue();
+                array[offset++] = e2.getKey();
+                array[offset++] = e2.getValue();
             }
             props.put(e.getKey(), array);
         }

@@ -37,7 +37,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * String the method {@link #getStringId(String)} returns its {@code int} value/
  * id.
  */
-public interface StringGraphDataProvider {
+public interface StringGraphState {
     /**
      * Returns the (numeric) ids of all nodes. 
      */

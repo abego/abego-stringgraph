@@ -25,8 +25,9 @@
 package org.abego.stringgraph.store;
 
 import org.abego.stringgraph.internal.FileUtil;
-import org.abego.stringgraph.internal.StringGraphData;
-import org.abego.stringgraph.internal.StringGraphDataProviderImpl;
+import org.abego.stringgraph.internal.StringGraphState;
+import org.abego.stringgraph.internal.StringGraphStateImpl;
+import org.abego.stringgraph.internal.StringGraphConstructingUtil;
 import org.abego.stringgraph.internal.StringGraphImpl;
 import org.abego.stringgraph.internal.VLQUtil;
 import org.abego.stringpool.StringPool;
@@ -48,8 +49,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.abego.stringgraph.internal.StringGraphData.createStringGraphData;
 
 class StringGraphStoreDefault implements StringGraphStore {
     //region FieldsState
@@ -86,26 +85,21 @@ class StringGraphStoreDefault implements StringGraphStore {
 
     @Override
     public void readStringGraph(StringGraphConstructing graphConstructing) {
-        StringGraphData stringGraphData = readStringGraphData();
-
-        // Now that we know the actual Strings we can finally add
-        // the items in the StringGraph
-        stringGraphData.addNodes(graphConstructing);
-        stringGraphData.addEdges(graphConstructing);
-        stringGraphData.addProps(graphConstructing);
+        StringGraphState state = readStringGraphState();
+        StringGraphConstructingUtil.constructGraph(state, graphConstructing);        
     }
 
     @Override
     public StringGraph readStringGraph() {
-        StringGraphData stringGraphData = readStringGraphData();
-        return StringGraphImpl.createStringGraph(stringGraphData);
+        StringGraphState state = readStringGraphState();
+        return StringGraphImpl.createStringGraph(state);
     }
 
-    private StringGraphData readStringGraphData() {
+    private StringGraphState readStringGraphState() {
         try (ObjectInputStream objectInputStream =
                      new ObjectInputStream(uri.toURL().openStream())) {
 
-            return readStringGraphDataFromStream(objectInputStream);
+            return readStringGraphStateFromStream(objectInputStream);
 
         } catch (Exception e) {
             throw new StringGraphStoreException(
@@ -144,7 +138,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     }
 
     // package-private, not private, for white-box tests
-    StringGraphData readStringGraphDataFromStream(ObjectInputStream objectInputStream) {
+    StringGraphState readStringGraphStateFromStream(ObjectInputStream objectInputStream) {
         StringGraphStoreUtil.readAndCheckDataFormat(
                 objectInputStream, getDataFormatName(), DATA_FORMAT_VERSION);
 
@@ -165,8 +159,8 @@ class StringGraphStoreDefault implements StringGraphStore {
                     break;
                 case END_TAG:
                     StringPool strings = readEndBlock(objectInputStream);
-                    return createStringGraphData(new StringGraphDataProviderImpl(
-                            props, nodesIDs, edgesIDs, strings));
+                    return new StringGraphStateImpl(
+                            props, nodesIDs, edgesIDs, strings);
                 default:
                     // to be able to read future file formats
                     // we ignore any tag we don't know.

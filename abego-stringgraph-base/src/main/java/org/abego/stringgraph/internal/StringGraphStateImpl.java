@@ -35,7 +35,7 @@ import java.util.Objects;
 
 import static org.abego.stringgraph.internal.ArrayUtil.intArray;
 
-public class StringGraphDataProviderImpl implements StringGraphDataProvider {
+public class StringGraphStateImpl implements StringGraphState {
     private final Map<Integer, int[]> props;
     private final int[] nodesIDs;
     private final int[] edgesIDs;
@@ -48,7 +48,7 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
     @Nullable
     private Map<String, Integer> stringIds;
 
-    public StringGraphDataProviderImpl(Map<Integer, int[]> props, int[] nodesIDs, int[] edgesIDs, StringPool strings) {
+    public StringGraphStateImpl(Map<Integer, int[]> props, int[] nodesIDs, int[] edgesIDs, StringPool strings) {
         this.props = props;
         this.nodesIDs = nodesIDs;
         this.edgesIDs = edgesIDs;
@@ -115,7 +115,7 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StringGraphDataProviderImpl that = (StringGraphDataProviderImpl) o;
+        StringGraphStateImpl that = (StringGraphStateImpl) o;
         return props.equals(that.props) && Arrays.equals(nodesIDs, that.nodesIDs) && Arrays.equals(edgesIDs, that.edgesIDs) && strings.equals(that.strings);
     }
 
