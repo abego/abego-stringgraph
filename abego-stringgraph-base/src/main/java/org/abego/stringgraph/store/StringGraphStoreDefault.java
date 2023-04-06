@@ -54,8 +54,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     //region FieldsState
     private final URI uri;
     //endregion
-
-
+    
     //region Factories
     private StringGraphStoreDefault(URI uri) {
         this.uri = uri;
