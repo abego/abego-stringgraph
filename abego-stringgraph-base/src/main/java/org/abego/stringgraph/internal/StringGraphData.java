@@ -35,7 +35,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +50,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static org.abego.stringgraph.internal.ArrayUtil.intArray;
 import static org.abego.stringgraph.internal.EdgeUtil.calcEdgeText;
 import static org.abego.stringgraph.internal.EmptyEdges.EMPTY_EDGES;
 import static org.abego.stringgraph.internal.EmptyNodes.EMPTY_NODES;
@@ -657,19 +657,6 @@ public class StringGraphData {
             }
         }
         return new MyNodes(Arrays.copyOf(buffer, i));
-    }
-
-    private static int[] intArray(@Nullable Collection<Integer> integers) {
-        if (integers == null) {
-            return new int[0];
-        }
-        int n = integers.size();
-        int[] result = new int[n];
-        int i = 0;
-        for (int x : integers) {
-            result[i++] = x;
-        }
-        return result;
     }
 
     @Nullable

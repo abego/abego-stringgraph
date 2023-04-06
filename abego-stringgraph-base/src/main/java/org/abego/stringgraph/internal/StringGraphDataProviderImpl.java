@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static org.abego.stringgraph.internal.ArrayUtil.intArray;
+
 public class StringGraphDataProviderImpl implements StringGraphDataProvider {
     private final Map<Integer, int[]> props;
     private final int[] nodesIDs;
@@ -85,8 +87,8 @@ public class StringGraphDataProviderImpl implements StringGraphDataProvider {
     }
 
     @Override
-    public Iterable<Map.Entry<Integer, int[]>> getAllProperties() {
-        return props.entrySet();
+    public int[] getNodesWithProperties() {
+        return intArray(props.keySet());
     }
 
     @Override

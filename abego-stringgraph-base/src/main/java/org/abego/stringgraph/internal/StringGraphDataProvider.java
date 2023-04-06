@@ -26,8 +26,6 @@ package org.abego.stringgraph.internal;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Map;
-
 /**
  * Provides "raw" data of a StringGraph, mainly using {@code int} values to
  * identify nodes, edges, labels etc. .
@@ -76,8 +74,10 @@ public interface StringGraphDataProvider {
      */
     int @Nullable [] getPropertyDataForNode(int nodeId);
 
-    //TODO: do we need this?
-    Iterable<Map.Entry<Integer, int[]>> getAllProperties();
+    /**
+     * Returns the ids of all Nodes that have PropertyData (/Properties).
+     */
+    int[] getNodesWithProperties();
 
     /**
      * Returns the String associated with the given {@code id}, as used as 

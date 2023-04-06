@@ -26,8 +26,6 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.StringGraphConstructing;
 
-import java.util.Map;
-
 public class StringGraphDataProviderUtil {
     
     public static void constructGraph(
@@ -47,10 +45,9 @@ public class StringGraphDataProviderUtil {
             );
         }
 
-        for (Map.Entry<Integer, int[]> e : provider.getAllProperties()) {
-            int nodeID = e.getKey();
-            int[] propsIDs = e.getValue();
-            int n = propsIDs.length / 2;
+        for (int nodeID : provider.getNodesWithProperties()) {
+            int[] propsIDs = provider.getPropertyDataForNode(nodeID);
+            int n = propsIDs != null ? propsIDs.length / 2 : 0;
             for (int i = 0; i < n; i++) {
                 graphConstructing.setNodeProperty(
                         provider.getString(nodeID),
