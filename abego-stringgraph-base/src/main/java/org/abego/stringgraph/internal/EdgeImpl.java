@@ -80,7 +80,7 @@ class EdgeImpl implements Edge {
 
     @Override
     public String toString() {
-        //noinspection HardCodedStringLiteral,StringConcatenation,MagicCharacter
+        //noinspection HardCodedStringLiteral,StringConcatenation
         return "EdgeImpl{" +
                 "fromNode=" + quoted2(getFromNode().id()) +
                 ", label=" + quoted2(getLabel()) +

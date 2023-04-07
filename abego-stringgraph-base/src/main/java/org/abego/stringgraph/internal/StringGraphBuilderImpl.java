@@ -118,11 +118,11 @@ final class StringGraphBuilderImpl implements StringGraphBuilder {
         return new StringGraphStateImpl(props, nodesIds, edgesIds, strings);
     }
 
-    private static int[] toFlatIntArray(Collection<EdgeData> edgeDatas) {
-        int count = edgeDatas.size();
+    private static int[] toFlatIntArray(Collection<EdgeData> edgeDataCollection) {
+        int count = edgeDataCollection.size();
         int[] result = new int[count * 3];
         int offset = 0;
-        for (EdgeData e : edgeDatas) {
+        for (EdgeData e : edgeDataCollection) {
             result[offset++] = e.fromId;
             result[offset++] = e.toId;
             result[offset++] = e.labelId;

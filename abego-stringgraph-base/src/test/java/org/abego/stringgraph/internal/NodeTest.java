@@ -25,15 +25,9 @@
 package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Node;
-import org.abego.stringgraph.core.StringGraph;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.abego.stringgraph.core.StringGraphTest.getSampleABCDEF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NodeTest {
@@ -45,20 +39,5 @@ public class NodeTest {
     void asNodeImpl() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> NodeImpl.asNodeImpl(null));
         assertEquals("NodeImpl expected, got null", e.getMessage());
-    }
-
-    @Test
-    void equals() {
-        StringGraph graph = getSampleABCDEF();
-
-        List<Node> twoNodesList = graph.nodes("A", null, "?").stream()
-                .collect(Collectors.toList());
-        Node n1 = twoNodesList.get(0);
-        Node n2 = twoNodesList.get(1);
-        assertEquals(n1, n1);
-        assertNotEquals(n1, null);
-        //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(n1, "no Node");
-        assertNotEquals(n1, n2);
     }
 }

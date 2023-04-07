@@ -36,7 +36,7 @@ import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 
 class EmptyEdges implements Edges {
-    public static Edges EMPTY_EDGES = new EmptyEdges();
+    public static final Edges EMPTY_EDGES = new EmptyEdges();
 
     @Override
     public int getSize() {

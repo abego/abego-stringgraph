@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -837,6 +838,20 @@ public class StringGraphTest {
         assertEquals("", asCommaSeparatedText(nodes.idStream()));
     }
 
+    @Test
+    void nodeEquals() {
+        StringGraph graph = getSampleABCDEF();
+
+        List<Node> twoNodesList = graph.nodes("A", null, "?").stream()
+                .collect(Collectors.toList());
+        Node n1 = twoNodesList.get(0);
+        Node n2 = twoNodesList.get(1);
+        assertEquals(n1, n1);
+        assertNotEquals(n1, null);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertNotEquals(n1, "no Node");
+        assertNotEquals(n1, n2);
+    }
 
     private static String asCommaSeparatedText(Stream<String> isStream) {
         return isStream.sorted().collect(Collectors.joining(","));

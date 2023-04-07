@@ -40,11 +40,12 @@ class EdgeLabelsImplTest {
         assertNotNull(el.stream());
         assertEquals(el, el);
         assertNotEquals(el, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(el, "");
         assertEquals(el, EdgeLabelsImpl.createEdgeLabels(Collections.emptySet()));
         
         //The following checks an implementation detail. 
-        // If implementation changes, the assert may need a change, too.
+        // If implementation changes, the expected condition may need a change, too.
         assertEquals(31, el.hashCode());
     }
 }
