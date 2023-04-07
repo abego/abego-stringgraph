@@ -2,7 +2,7 @@ package org.abego.stringgraph.dotdigraph;
 
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.StringGraph;
-import org.abego.stringgraph.internal.StringUtil;
+import org.abego.stringgraph.internal.commons.StringUtil;
 
 import java.io.PrintStream;
 

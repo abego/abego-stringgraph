@@ -24,37 +24,27 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.StringGraphConstructing;
+import org.abego.stringgraph.core.EdgeLabels;
+import org.junit.jupiter.api.Test;
 
-public class StringGraphConstructingUtil {
-    
-    public static void constructGraph(
-            StringGraphState state,
-            StringGraphConstructing graphConstructing) {
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class EdgeLabelsImplTest {
+    @Test
+    void smoketest() {
+        EdgeLabels el = EdgeLabelsImpl.createEdgeLabels(Collections.emptySet());
+
+        assertEquals(0, el.getSize());
+        assertNotNull(el.stream());
+        assertEquals(el, el);
+        assertNotEquals(el, null);
+        assertNotEquals(el, "");
+        assertEquals(el, EdgeLabelsImpl.createEdgeLabels(Collections.emptySet()));
         
-        for (int nodesID : state.getNodesIds()) {
-            graphConstructing.addNode(state.getString(nodesID));
-        }
-
-        int edgesCount = state.getEdgesCount();
-        for (int i = 0; i < edgesCount; i++) {
-            graphConstructing.addEdge(
-                    state.getString(state.getFromId(i)),
-                    state.getString(state.getLabelId(i)),
-                    state.getString(state.getToId(i))
-            );
-        }
-
-        for (int nodeID : state.getNodesWithProperties()) {
-            int[] propsIDs = state.getPropertyDataForNode(nodeID);
-            int n = propsIDs != null ? propsIDs.length / 2 : 0;
-            for (int i = 0; i < n; i++) {
-                graphConstructing.setNodeProperty(
-                        state.getString(nodeID),
-                        state.getString(propsIDs[2 * i]),
-                        state.getString(propsIDs[2 * i + 1]));
-            }
-        }
+        //The following checks an implementation detail. 
+        // If implementation changes, the assert may need a change, too.
+        assertEquals(31, el.hashCode());
     }
-
 }

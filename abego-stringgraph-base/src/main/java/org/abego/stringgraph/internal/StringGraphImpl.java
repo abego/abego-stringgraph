@@ -33,6 +33,7 @@ import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.Property;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphException;
+import org.abego.stringgraph.internal.commons.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;

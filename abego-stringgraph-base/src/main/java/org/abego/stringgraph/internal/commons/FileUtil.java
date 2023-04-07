@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.internal;
+package org.abego.stringgraph.internal.commons;
 
 import org.eclipse.jdt.annotation.Nullable;
 

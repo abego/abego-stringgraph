@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.internal;
 
+import org.abego.stringgraph.internal.commons.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -191,9 +192,9 @@ public final class IterableUtil {
      *                      are appended but an <code>"..."</code>
      *                      [Default: Integer.MAX_VALUE]
      */
-    private static <T> void appendTextOf(
+    private static < T> void appendTextOf(
             StringBuilder stringBuilder,
-            Iterable<T> items,
+            Iterable<@Nullable T> items,
             CharSequence separator,
             String emptyText,
             Function<T, String> textOfItem,

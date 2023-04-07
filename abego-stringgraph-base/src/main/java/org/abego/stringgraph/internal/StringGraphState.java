@@ -24,6 +24,7 @@
 
 package org.abego.stringgraph.internal;
 
+import org.abego.stringgraph.core.StringGraphConstructing;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -97,4 +98,32 @@ public interface StringGraphState {
      * {@code 0} when no id is associated with that string.
      */
     int getStringIdOrZero(String string);
+
+     default void constructGraph(
+            StringGraphConstructing graphConstructing) {
+
+        for (int nodesID : getNodesIds()) {
+            graphConstructing.addNode(getString(nodesID));
+        }
+
+        int edgesCount = getEdgesCount();
+        for (int i = 0; i < edgesCount; i++) {
+            graphConstructing.addEdge(
+                    getString(getFromId(i)),
+                    getString(getLabelId(i)),
+                    getString(getToId(i))
+            );
+        }
+
+        for (int nodeID : getNodesWithProperties()) {
+            int[] propsIDs = getPropertyDataForNode(nodeID);
+            int n = propsIDs != null ? propsIDs.length / 2 : 0;
+            for (int i = 0; i < n; i++) {
+                graphConstructing.setNodeProperty(
+                        getString(nodeID),
+                        getString(propsIDs[2 * i]),
+                        getString(propsIDs[2 * i + 1]));
+            }
+        }
+    }
 }

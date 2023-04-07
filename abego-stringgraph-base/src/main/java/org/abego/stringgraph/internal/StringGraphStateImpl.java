@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static org.abego.stringgraph.internal.ArrayUtil.intArray;
+import static org.abego.stringgraph.internal.commons.ArrayUtil.intArray;
 
 public class StringGraphStateImpl implements StringGraphState {
     private final Map<Integer, int[]> props;

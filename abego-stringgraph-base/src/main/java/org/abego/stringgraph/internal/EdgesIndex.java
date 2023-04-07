@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.abego.stringgraph.internal.ArrayUtil.intArray;
+import static org.abego.stringgraph.internal.commons.ArrayUtil.intArray;
 import static org.abego.stringgraph.internal.EmptyEdges.EMPTY_EDGES;
 
 class EdgesIndex {

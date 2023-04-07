@@ -22,34 +22,28 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.internal;
+package org.abego.stringgraph.internal.commons;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.*;
 
-final class ArrayUtil {
+class StringUtilTest {
 
-    static int[] intArray(@Nullable Collection<Integer> integers) {
-        if (integers == null) {
-            return new int[0];
-        }
-        int n = integers.size();
-        int[] result = new int[n];
-        int i = 0;
-        for (int x : integers) {
-            result[i++] = x;
-        }
-        return result;
+    @Test
+    void constructor() {
+        assertThrows(UnsupportedOperationException.class, StringUtil::new);
     }
 
-    public static int[] toIntArray(Collection<Integer> integers) {
-        int n = integers.size();
-        int[] result =new int[n];
-        int i=0;
-        for (int v:integers) {
-            result[i++] = v;
-        }
-        return result;
+    @Test
+    void quotedIfNeeded() {
+        assertEquals("\"\"", StringUtil.quotedIfNeeded(""));
+        assertEquals("a", StringUtil.quotedIfNeeded("a"));
+        assertEquals("abc", StringUtil.quotedIfNeeded("abc"));
+        assertEquals("-aAzZ09_+*=.:;/@?&#()[]{}<>",
+                StringUtil.quotedIfNeeded("-aAzZ09_+*=.:;/@?&#()[]{}<>"));
+        assertEquals("\"two words\"", StringUtil.quotedIfNeeded("two words"));
+        assertEquals("\"two\\nlines\"", StringUtil.quotedIfNeeded("two\nlines"));
+        assertEquals("\"Ü=Umlaut-U\"", StringUtil.quotedIfNeeded("Ü=Umlaut-U"));
     }
 }

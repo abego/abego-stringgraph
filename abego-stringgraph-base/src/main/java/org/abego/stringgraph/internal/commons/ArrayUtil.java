@@ -22,48 +22,25 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.internal;
+package org.abego.stringgraph.internal.commons;
 
-import org.abego.stringgraph.core.Property;
+import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Comparator;
+import java.util.Collection;
 
-import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
+public final class ArrayUtil {
 
-class PropertyImpl implements Property {
-    private static final Comparator<Property> PROPERTY_COMPARATOR =
-            Comparator.comparing(Property::getName)
-                    .thenComparing(Property::getValue);
-    private final int nameId;
-    private final int valueId;
-    private final StringGraphState state;
-
-    public PropertyImpl(int nameId, int valueId, StringGraphState state) {
-        this.nameId = nameId;
-        this.valueId = valueId;
-        this.state = state;
+    public static int[] intArray(@Nullable Collection<Integer> integers) {
+        return integers != null ? toIntArray(integers) : new int[0];
     }
 
-    @Override
-    public String getName() {
-        return state.getString(nameId);
-    }
-
-    @Override
-    public String getValue() {
-        return state.getString(valueId);
-    }
-
-    @Override
-    public String toString() {
-        return "MyProperty{" +
-                "name=" + quoted2(getName()) +
-                ", value=" + quoted2(getValue()) +
-                '}';
-    }
-
-    @Override
-    public int compareTo(Property o) {
-        return PROPERTY_COMPARATOR.compare(this, o);
+    public static int[] toIntArray(Collection<Integer> integers) {
+        int n = integers.size();
+        int[] result = new int[n];
+        int i = 0;
+        for (int v : integers) {
+            result[i++] = v;
+        }
+        return result;
     }
 }

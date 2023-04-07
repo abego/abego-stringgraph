@@ -26,10 +26,11 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Node;
+import org.abego.stringgraph.internal.commons.EdgeUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
-import static org.abego.stringgraph.internal.EdgeUtil.calcEdgeText;
-import static org.abego.stringgraph.internal.StringUtil.quoted2;
+import static org.abego.stringgraph.internal.commons.EdgeUtil.calcEdgeText;
+import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
 
 class EdgeImpl implements Edge {
     private final int id;

@@ -26,6 +26,7 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
+import org.abego.stringgraph.internal.commons.EdgeUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;

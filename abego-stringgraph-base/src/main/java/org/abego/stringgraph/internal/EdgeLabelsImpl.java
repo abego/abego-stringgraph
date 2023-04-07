@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
 
-public class EdgeLabelsImpl implements EdgeLabels {
+class EdgeLabelsImpl implements EdgeLabels {
     public static final EdgeLabels EMPTY_EDGE_LABELS =
             createEdgeLabels(emptySet());
     

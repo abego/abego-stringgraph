@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.abego.stringgraph.internal.ArrayUtil.toIntArray;
+import static org.abego.stringgraph.internal.commons.ArrayUtil.toIntArray;
 
 
 public final class StringGraphBuilderImpl implements StringGraphBuilder {

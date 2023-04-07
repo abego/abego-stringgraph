@@ -27,8 +27,8 @@ package org.abego.stringgraph.internal;
 import org.abego.stringgraph.core.Node;
 import org.eclipse.jdt.annotation.Nullable;
 
-import static org.abego.stringgraph.internal.StringUtil.quoted2;
-import static org.abego.stringgraph.internal.StringUtil.quotedIfNeeded;
+import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
+import static org.abego.stringgraph.internal.commons.StringUtil.quotedIfNeeded;
 
 class NodeImpl implements Node {
     private final int id;

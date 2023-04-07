@@ -24,12 +24,11 @@
 
 package org.abego.stringgraph.store;
 
-import org.abego.stringgraph.internal.FileUtil;
+import org.abego.stringgraph.internal.commons.FileUtil;
 import org.abego.stringgraph.internal.StringGraphState;
 import org.abego.stringgraph.internal.StringGraphStateImpl;
-import org.abego.stringgraph.internal.StringGraphConstructingUtil;
 import org.abego.stringgraph.internal.StringGraphImpl;
-import org.abego.stringgraph.internal.VLQUtil;
+import org.abego.stringgraph.internal.commons.VLQUtil;
 import org.abego.stringpool.StringPool;
 import org.abego.stringpool.StringPoolBuilder;
 import org.abego.stringpool.StringPools;
@@ -85,7 +84,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     @Override
     public void readStringGraph(StringGraphConstructing graphConstructing) {
         StringGraphState state = readStringGraphState();
-        StringGraphConstructingUtil.constructGraph(state, graphConstructing);        
+        state.constructGraph(graphConstructing);        
     }
 
     @Override

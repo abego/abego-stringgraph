@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.abego.stringgraph.internal;
+package org.abego.stringgraph.internal.commons;
 
 // Original: https://github.com/abego/commons
 public final class VLQUtil {
