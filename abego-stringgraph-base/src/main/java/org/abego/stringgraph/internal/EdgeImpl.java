@@ -29,6 +29,7 @@ import org.abego.stringgraph.core.Node;
 import org.abego.stringgraph.internal.commons.EdgeUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
+import static org.abego.stringgraph.internal.commons.ClassUtil.className;
 import static org.abego.stringgraph.internal.commons.EdgeUtil.calcEdgeText;
 import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
 
@@ -41,9 +42,9 @@ class EdgeImpl implements Edge {
         this.state = state;
     }
 
-    static EdgeImpl asEdgeImpl(Edge edge) {
+    static EdgeImpl asEdgeImpl(@Nullable Edge edge) {
         if (!(edge instanceof EdgeImpl)) {
-            throw new IllegalArgumentException("EdgeImpl expected, got " + edge.getClass());
+            throw new IllegalArgumentException("EdgeImpl expected, got " + className(edge));
         }
         return (EdgeImpl) edge;
     }

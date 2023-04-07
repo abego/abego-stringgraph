@@ -27,6 +27,7 @@ package org.abego.stringgraph.internal;
 import org.abego.stringgraph.core.Node;
 import org.eclipse.jdt.annotation.Nullable;
 
+import static org.abego.stringgraph.internal.commons.ClassUtil.className;
 import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
 import static org.abego.stringgraph.internal.commons.StringUtil.quotedIfNeeded;
 
@@ -34,9 +35,9 @@ class NodeImpl implements Node {
     private final int id;
     private final StringGraphState state;
 
-    static NodeImpl asNodeImpl(Node node) {
+    static NodeImpl asNodeImpl(@Nullable Node node) {
         if (!(node instanceof NodeImpl)) {
-            throw new IllegalArgumentException("NodeImpl expected, got " + node.getClass());
+            throw new IllegalArgumentException("NodeImpl expected, got " + className(node));
         }
         return (NodeImpl) node;
     }

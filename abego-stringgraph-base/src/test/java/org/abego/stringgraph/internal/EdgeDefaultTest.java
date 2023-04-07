@@ -29,7 +29,7 @@ import org.abego.stringgraph.core.Edges;
 import org.abego.stringgraph.core.StringGraphBuilder;
 import org.junit.jupiter.api.Test;
 
-import static org.abego.stringgraph.core.NodeTest.assertNodeEquals;
+import static org.abego.stringgraph.internal.NodeTest.assertNodeEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 

@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static org.abego.stringgraph.internal.EmptyEdges.EMPTY_EDGES;
 import static org.abego.stringgraph.internal.EmptyNodes.EMPTY_NODES;
+import static org.abego.stringgraph.internal.NodeImpl.asNodeImpl;
 
 class StringGraphImpl implements StringGraph {
 
@@ -393,12 +394,9 @@ class StringGraphImpl implements StringGraph {
             return EMPTY_NODES;
         }
 
-        int[] nodesIDs = nodes.stream().mapToInt(e -> {
-            if (!(e instanceof NodeImpl)) {
-                throw new IllegalArgumentException("NodeImpl expected, got " + e.getClass());
-            }
-            return ((NodeImpl) e).idAsInt();
-        }).toArray();
+        int[] nodesIDs = nodes.stream()
+                .mapToInt(e -> asNodeImpl(e).idAsInt())
+                .toArray();
         return new NodesImpl(nodesIDs, state);
     }
 

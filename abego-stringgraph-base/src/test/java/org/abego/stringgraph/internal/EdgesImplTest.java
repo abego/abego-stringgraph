@@ -24,62 +24,36 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
+import org.abego.stringgraph.core.StringGraph;
+import org.junit.jupiter.api.Test;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import static org.abego.stringgraph.core.StringGraphTest.getSampleABCDEF;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import static java.util.Collections.emptyIterator;
-import static java.util.Collections.emptyList;
+class EdgesImplTest {
+    @Test
+    void equalsTest() {
+        StringGraph graph = getSampleABCDEF();
 
-class EmptyEdges implements Edges {
-    public static Edges EMPTY_EDGES = new EmptyEdges();
+        Edges twoEdges = graph.edges("A", null, null);
+        Edges allEdges = graph.edges();
 
-    @Override
-    public int getSize() {
-        return 0;
+        assertEquals(twoEdges, twoEdges);
+        assertNotEquals(twoEdges, null);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertNotEquals(twoEdges, "no Edges");
+        assertNotEquals(twoEdges, allEdges);
     }
 
-    @Override
-    public Stream<Edge> stream() {
-        return Stream.empty();
-    }
+    @Test
+    void hashCodeTest() {
+        StringGraph graph = getSampleABCDEF();
 
-    @Override
-    public boolean contains(Edge edge) {
-        return false;
-    }
+        Edges twoEdges = graph.edges("A", null, null);
 
-    @Override
-    public boolean contains(String fromNode, String label, String toNode) {
-        return false;
-    }
-
-    @Override
-    public Edges filtered(Predicate<Edge> edgePredicate) {
-        return this;
-    }
-
-    @Override
-    public Edges intersected(Edges otherEdges) {
-        return this;
-    }
-
-    @Override
-    public Iterable<Edge> sorted(Comparator<? super Edge> comparator) {
-        return emptyList();
-    }
-
-    @Override
-    public Iterable<Edge> sorted() {
-        return emptyList();
-    }
-
-    @Override
-    public Iterator<Edge> iterator() {
-        return emptyIterator();
+        // Assert may change when implementation changes
+        assertEquals(964, twoEdges.hashCode());
     }
 }

@@ -32,14 +32,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import static org.abego.stringgraph.internal.commons.ClassUtil.className;
+
 class NodesImpl implements Nodes {
     private final int[] nodesIDs;
     private final StringGraphState state;
     private boolean isSorted = false;
 
-    static NodesImpl asNodesImpl(Nodes nodes) {
+    static NodesImpl asNodesImpl(@Nullable Nodes nodes) {
         if (!(nodes instanceof NodesImpl)) {
-            throw new IllegalArgumentException("NodesImpl expected, got " + nodes.getClass());
+            throw new IllegalArgumentException("NodesImpl expected, got " + className(nodes));
         }
         return (NodesImpl) nodes;
     }

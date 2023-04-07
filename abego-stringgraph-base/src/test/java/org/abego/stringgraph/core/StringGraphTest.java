@@ -39,18 +39,20 @@ import static org.abego.stringgraph.internal.EdgeDefaultTest.assertEdgesEqualsIg
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StringGraphTest {
     private static final StringGraph SAMPLE1 =
-            constructSample1(StringGraphs.getInstance().createStringGraphBuilder())
+            constructSample1(StringGraphs.getInstance()
+                    .createStringGraphBuilder())
                     .build();
 
     static Stream<StringGraph> stringGraphSample1Provider() {
         return Stream.of(SAMPLE1);
     }
-    
+
     public static void assertNodesAsLinesEquals(
             String expectedStringsInLines, Iterable<Node> nodes) {
         assertEquals(expectedStringsInLines,
@@ -80,7 +82,8 @@ public class StringGraphTest {
     }
 
     public static StringGraph getSingleEdgeGraph() {
-        StringGraphBuilder builder = StringGraphs.getInstance().createStringGraphBuilder();
+        StringGraphBuilder builder = StringGraphs.getInstance()
+                .createStringGraphBuilder();
         builder.addEdge("from", "label", "to");
         return builder.build();
     }
@@ -218,8 +221,9 @@ public class StringGraphTest {
      *
      * </pre>
      */
-    private static StringGraph getSampleABCDEF() {
-        StringGraphBuilder builder = StringGraphs.getInstance().createStringGraphBuilder();
+    public static StringGraph getSampleABCDEF() {
+        StringGraphBuilder builder = StringGraphs.getInstance()
+                .createStringGraphBuilder();
         builder.addEdge("A", "e1", "B");
         builder.addEdge("A", "e2", "D");
         builder.addEdge("C", "e3", "B");
@@ -543,7 +547,7 @@ public class StringGraphTest {
     void equalsAndHashcode() {
         StringGraphBuilder builder =
                 StringGraphs.getInstance().createStringGraphBuilder();
-        
+
         StringGraph sample1 = constructSample1(builder).build();
         StringGraph otherSample1 = constructSample1(builder).build();
         int h1 = sample1.hashCode();
@@ -553,7 +557,7 @@ public class StringGraphTest {
         assertNotEquals(sample1, "not a graph");
         assertNotEquals(sample1, null);
         assertEquals(sample1, sample1);
-        
+
         // comparing StringGraph will not compare the content, i.e. even with
         // same content two StringGraphs will be different (if no identical).
         assertNotEquals(sample1, otherSample1);
@@ -572,7 +576,7 @@ public class StringGraphTest {
     void duplicateEdges() {
         StringGraphBuilder builder =
                 StringGraphs.getInstance().createStringGraphBuilder();
-        
+
         builder.addEdge("a", "c", "b");
         builder.addEdge("d", "f", "e");
         // adding an edge that already exists will not change the graph
@@ -675,7 +679,7 @@ public class StringGraphTest {
 
         // ... iterator
         StringBuilder sb = new StringBuilder();
-        ps.stream().sorted().forEach(p-> {
+        ps.stream().sorted().forEach(p -> {
             sb.append(p.getName());
             sb.append("=");
             sb.append(p.getValue());
@@ -685,9 +689,9 @@ public class StringGraphTest {
         // ... iterator (next)
         assertThrows(NoSuchElementException.class, () ->
                 graph.getNodeProperties("noNode").iterator().next());
-        
+
         // ... stream
-        assertEquals(2,ps.stream().count());
+        assertEquals(2, ps.stream().count());
     }
 
     @Test
@@ -757,9 +761,40 @@ public class StringGraphTest {
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
         e = assertThrows(ExactlyOneNodeExpectedException.class, twoNodes::singleNodeId);
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
-        
+
         Node n = oneNode.singleNode();
-        assertEquals("NodeImpl{id=\"A\"}",n.toString());
+        assertEquals("NodeImpl{id=\"A\"}", n.toString());
+    }
+
+    @Test
+    void emptyNodes() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes noNodes = graph.nodes("X", "Y", "?");
+        Nodes twoNodes = graph.nodes("A", null, "?");
+
+        assertEquals(0, noNodes.getSize());
+        assertEquals(0, noNodes.stream().count());
+        assertEquals(0, noNodes.intersected(twoNodes).getSize());
+        assertNotNull(noNodes.iterator());
+    }
+
+    @Test
+    void emptyEdges() {
+        StringGraph graph = getSampleABCDEF();
+        Edges noEdges = graph.edges("X", "Y", "Z");
+        Edges twoEdges = graph.edges("A", null, null);
+        Edge edge = twoEdges.stream().findAny()
+                .orElseThrow(NoSuchElementException::new);
+
+        assertEquals(0, noEdges.getSize());
+        assertEquals(0, noEdges.stream().count());
+        assertFalse(noEdges.contains(edge));
+        assertFalse(noEdges.contains("X", "Y", "Z"));
+        assertEquals(0, noEdges.filtered(e -> true).getSize());
+        assertEquals(0, noEdges.intersected(twoEdges).getSize());
+        assertNotNull(noEdges.sorted());
+        assertNotNull(noEdges.sorted((a, b) -> 0));
+        assertNotNull(noEdges.iterator());
     }
 
     @Test
@@ -780,7 +815,7 @@ public class StringGraphTest {
     }
 
     @Test
-    void intersectedWith() {
+    void intersected() {
         StringGraph graph = getSampleABCDEF();
         Nodes allNodes = graph.nodes();
         Nodes oneNode = graph.nodes("?", "e1", "B");

@@ -39,14 +39,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.abego.stringgraph.internal.EdgeImpl.asEdgeImpl;
+import static org.abego.stringgraph.internal.commons.ClassUtil.className;
 
 class EdgesImpl implements Edges {
     private final int[] edgesIds;
     private final StringGraphState state;
 
-    static EdgesImpl asEdgesImpl(Edges edges) {
+    static EdgesImpl asEdgesImpl(@Nullable Edges edges) {
         if (!(edges instanceof EdgesImpl)) {
-            throw new IllegalArgumentException("EdgesImpl expected, got " + edges.getClass());
+            throw new IllegalArgumentException("EdgesImpl expected, got " + className(edges));
         }
         return (EdgesImpl) edges;
     }
