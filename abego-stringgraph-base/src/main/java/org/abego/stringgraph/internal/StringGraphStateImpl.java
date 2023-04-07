@@ -35,7 +35,7 @@ import java.util.Objects;
 
 import static org.abego.stringgraph.internal.commons.ArrayUtil.intArray;
 
-public class StringGraphStateImpl implements StringGraphState {
+class StringGraphStateImpl implements StringGraphState {
     private final Map<Integer, int[]> props;
     private final int[] nodesIDs;
     private final int[] edgesIDs;

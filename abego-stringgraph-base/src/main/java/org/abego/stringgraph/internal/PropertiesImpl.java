@@ -24,7 +24,7 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.NoSuchPropertyException;
+import org.abego.stringgraph.core.exception.NoSuchPropertyException;
 import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.Property;
 import org.eclipse.jdt.annotation.Nullable;

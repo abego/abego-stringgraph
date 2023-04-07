@@ -23,8 +23,11 @@
  */
 
 /**
- * A graph implementation using String objects to represent the nodes and the
- * labels of the edges.
+ * A directed graph implementation using String objects to represent the nodes 
+ * and the labels of the edges and supporting custom definable properties 
+ * on the nodes.
+ * <p>
+ * The entry to this module is {@link org.abego.stringgraph.core.StringGraphs}.
  */
 @NonNullByDefault
 package org.abego.stringgraph.core;

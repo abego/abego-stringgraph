@@ -46,7 +46,7 @@ class EdgesImpl implements Edges {
 
     static EdgesImpl asEdgesImpl(Edges edges) {
         if (!(edges instanceof EdgesImpl)) {
-            throw new IllegalArgumentException("MyEdges expected, got " + edges.getClass());
+            throw new IllegalArgumentException("EdgesImpl expected, got " + edges.getClass());
         }
         return (EdgesImpl) edges;
     }
@@ -106,11 +106,11 @@ class EdgesImpl implements Edges {
 
     @Override
     public Edges filtered(Predicate<Edge> edgePredicate) {
-        return createMyEdges(stream().filter(edgePredicate)
+        return createEdges(stream().filter(edgePredicate)
                 .collect(Collectors.toSet()));
     }
 
-    private EdgesImpl createMyEdges(Set<Edge> edges) {
+    private Edges createEdges(Set<Edge> edges) {
         int n = edges.size();
         int[] resultIds = new int[n];
         int i = 0;
@@ -143,7 +143,7 @@ class EdgesImpl implements Edges {
             }
         }
 
-        return createMyEdges(result);
+        return createEdges(result);
     }
 
     @Override

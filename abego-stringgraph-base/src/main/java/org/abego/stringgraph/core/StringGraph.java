@@ -30,6 +30,11 @@ import java.util.function.Predicate;
 
 public interface StringGraph {
 
+    //region Nodes
+
+    /**
+     * Returns all {@link Nodes} of this {@link StringGraph}
+     */
     Nodes nodes();
 
     /**
@@ -41,21 +46,22 @@ public interface StringGraph {
      *     <li>start with a {@code "?"} to indicate Nodes of this part are
      *     queried (should be returned when an edge is selected according
      *     to the query), or</li>
-     *     <li>a String to be used to limit the edges to considered to those
-     *     that have the given value as for that part, or</li>
+     *     <li>be a String not starting with {@code "?"} in which case only 
+     *     those edges are considered that have the given string
+     *     as their value that part, or</li>
      *     <li>be {@code null} to allow any possible value for that part.</li>
      * </ul>
      * <p>
      * The following combinations are supported:
      * <table>
      *     <tr><th>Call</th><th>Result</th></tr>
-     *     <tr><td>{@code nodes("?", null, null)}</td><td>all nodes used at the "from" side</td></tr>
-     *     <tr><td>{@code nodes(null, null, "?")}</td><td> all nodes used at the "to" side</td></tr>
-     *     <tr><td>{@code nodes("?", null, "?")}</td><td> all nodes</td></tr>
-     *     <tr><td>{@code nodes("?", null, "ABC")}</td><td> all nodes that reference "ABC"</td></tr>
-     *     <tr><td>{@code nodes("ABC", null, "?")}</td><td> all nodes that are referenced by "ABC"</td></tr>
-     *     <tr><td>{@code nodes("?", "lab", "ABC")}</td><td> all nodes that reference "ABC" through an edge with label "lab"</td></tr>
-     *     <tr><td>{@code nodes("ABC", "lab", "?")}</td><td> all nodes that are referenced by "ABC" through an edge with label "lab"</td></tr>
+     *     <tr><td>{@code nodes("?", null, null)}</td><td>all nodes used at the "from" side (like {@link #fromNodes()})</td></tr>
+     *     <tr><td>{@code nodes(null, null, "?")}</td><td> all nodes used at the "to" side (like {@link #toNodes()})</td></tr>
+     *     <tr><td>{@code nodes("?", null, "?")}</td><td> all nodes (like {@link #nodes()})</td></tr>
+     *     <tr><td>{@code nodes("?", null, "ABC")}</td><td> all nodes that reference "ABC" (like {@link #nodesToNode(String)})</td></tr>
+     *     <tr><td>{@code nodes("ABC", null, "?")}</td><td> all nodes that are referenced by "ABC" (like {@link #nodesFromNode(String)})</td></tr>
+     *     <tr><td>{@code nodes("?", "lab", "ABC")}</td><td> all nodes that reference "ABC" through an edge with label "lab" (like {@link #nodesViaEdgeLabeledToNode(String, String)})</td></tr>
+     *     <tr><td>{@code nodes("ABC", "lab", "?")}</td><td> all nodes that are referenced by "ABC" through an edge with label "lab" (like {@link #nodesFromNodeViaEdgeLabeled(String, String)})</td></tr>
      *     <tr><td>{@code nodes("?", "lab", null)}</td><td> all nodes referencing something through an edge with label "lab"</td></tr>
      *     <tr><td>{@code nodes(null, "lab", "?")}</td><td> all nodes that are referenced through an edge with label "lab"</td></tr>
      *     <tr><td>{@code nodes("?", "lab", "?")}</td><td> all nodes used in edges with label "lab"</td></tr>
@@ -64,6 +70,35 @@ public interface StringGraph {
      */
     Nodes nodes(@Nullable String fromPattern, @Nullable String labelPattern, @Nullable String toPattern);
 
+    Nodes fromNodes();
+
+    Nodes toNodes();
+    Nodes nodesFromNode(String fromNode);
+
+    default Nodes nodesFrom(Node node) {
+        return nodesFromNode(node.id());
+    }
+
+    Nodes nodesFromNodeViaEdgeLabeled(String fromNode, String edgeLabel);
+
+    default Nodes nodesFromNodeViaEdgeLabeled(Node node, String edgeLabel) {
+        return nodesFromNodeViaEdgeLabeled(node.id(), edgeLabel);
+    }
+
+    Nodes nodesToNode(String toNode);
+
+    default Nodes nodesTo(Node node) {
+        return nodesToNode(node.id());
+    }
+
+    Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode);
+
+    default Nodes nodesViaEdgeLabeledTo(String edgeLabel, Node node) {
+        return nodesViaEdgeLabeledToNode(edgeLabel, node.id());
+    }
+    //endregion
+    
+    //region Edges
     Edges edges();
 
     /**
@@ -87,6 +122,45 @@ public interface StringGraph {
      */
     Edges edges(@Nullable String from, @Nullable String label, @Nullable String to);
 
+
+    Edges edgesWith(Predicate<Edge> edgePredicate);
+
+    Edges edgesLabeled(String edgeLabel);
+
+    Edges edgesFromNode(String fromNode);
+
+    default Edges edgesFrom(Node node) {
+        return edgesFromNode(node.id());
+    }
+
+    Edges edgesToNode(String toNode);
+
+    default Edges edgesTo(Node node) {
+        return edgesToNode(node.id());
+    }
+
+    boolean hasEdge(String fromNode, String edgeLabel, String toNode);
+
+    default boolean hasEdge(Node fromNode, String edgeLabel, Node toNode) {
+        return hasEdge(fromNode.id(), edgeLabel, toNode.id());
+    }
+
+    EdgeLabels edgeLabels();
+
+    EdgeLabels edgeLabelsFromNode(String fromNode);
+
+    default EdgeLabels edgeLabelsFrom(Node node) {
+        return edgeLabelsFromNode(node.id());
+    }
+    EdgeLabels edgeLabelsToNode(String toNode);
+
+    default EdgeLabels edgeLabelsTo(Node node) {
+        return edgeLabelsToNode(node.id());
+    }
+    
+    //endregion
+    
+    //region Properties
     Properties getNodeProperties(String node);
 
     default Properties getProperties(Node node) {
@@ -118,69 +192,5 @@ public interface StringGraph {
             Node node, String propertyName, String defaultValue) {
         return getNodePropertyValueOrElse(node.id(), propertyName, defaultValue);
     }
-
-    Nodes fromNodes();
-
-    Nodes toNodes();
-
-    EdgeLabels edgeLabels();
-
-    Nodes nodesFromNode(String fromNode);
-
-    default Nodes nodesFrom(Node node) {
-        return nodesFromNode(node.id());
-    }
-
-    EdgeLabels edgeLabelsFromNode(String fromNode);
-
-    default EdgeLabels edgeLabelsFrom(Node node) {
-        return edgeLabelsFromNode(node.id());
-    }
-
-    Nodes nodesFromNodeViaEdgeLabeled(String fromNode, String edgeLabel);
-
-    default Nodes nodesFromNodeViaEdgeLabeled(Node node, String edgeLabel) {
-        return nodesFromNodeViaEdgeLabeled(node.id(), edgeLabel);
-    }
-
-    Nodes nodesToNode(String toNode);
-
-    default Nodes nodesTo(Node node) {
-        return nodesToNode(node.id());
-    }
-
-    EdgeLabels edgeLabelsToNode(String toNode);
-
-    default EdgeLabels edgeLabelsTo(Node node) {
-        return edgeLabelsToNode(node.id());
-    }
-
-    Nodes nodesViaEdgeLabeledToNode(String edgeLabel, String toNode);
-
-    default Nodes nodesViaEdgeLabeledTo(String edgeLabel, Node node) {
-        return nodesViaEdgeLabeledToNode(edgeLabel, node.id());
-    }
-
-    Edges edgesWith(Predicate<Edge> edgePredicate);
-
-    Edges edgesLabeled(String edgeLabel);
-
-    Edges edgesFromNode(String fromNode);
-
-    default Edges edgesFrom(Node node) {
-        return edgesFromNode(node.id());
-    }
-
-    Edges edgesToNode(String toNode);
-
-    default Edges edgesTo(Node node) {
-        return edgesToNode(node.id());
-    }
-
-    boolean hasEdge(String fromNode, String edgeLabel, String toNode);
-
-    default boolean hasEdge(Node fromNode, String edgeLabel, Node toNode) {
-        return hasEdge(fromNode.id(), edgeLabel, toNode.id());
-    }
-
+    //endregion
 }

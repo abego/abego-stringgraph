@@ -27,9 +27,9 @@ package org.abego.stringgraph.internal.commons;
 import org.abego.stringgraph.core.Edge;
 import org.abego.stringgraph.core.Edges;
 import org.abego.stringgraph.core.StringGraphBuilder;
+import org.abego.stringgraph.core.StringGraphs;
 import org.abego.stringgraph.internal.EdgeDefaultTest;
 import org.abego.stringgraph.internal.IterableUtil;
-import org.abego.stringgraph.internal.StringGraphBuilderImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +39,8 @@ class EdgeUtilTest {
     private final static Edges EDGES_TO_SORT = createEdgesToSort();
 
     private static Edges createEdgesToSort() {
-        StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
+        StringGraphBuilder builder =
+                StringGraphs.getInstance().createStringGraphBuilder();
         builder.addEdge("a", "c", "b");
         builder.addEdge("", "c", "b");
         builder.addEdge("a", "c", "");

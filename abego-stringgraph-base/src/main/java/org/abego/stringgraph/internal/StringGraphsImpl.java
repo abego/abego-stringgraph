@@ -24,46 +24,40 @@
 
 package org.abego.stringgraph.internal;
 
-import org.abego.stringgraph.core.Property;
+import org.abego.stringgraph.core.StringGraph;
+import org.abego.stringgraph.core.StringGraphBuilder;
+import org.abego.stringgraph.core.StringGraphConstructing;
+import org.abego.stringgraph.core.StringGraphs;
 
-import java.util.Comparator;
+import java.net.URI;
 
-import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
+public class StringGraphsImpl implements StringGraphs {
+    private static final StringGraphs INSTANCE = new StringGraphsImpl();
 
-class PropertyImpl implements Property {
-    private static final Comparator<Property> PROPERTY_COMPARATOR =
-            Comparator.comparing(Property::getName)
-                    .thenComparing(Property::getValue);
-    private final int nameId;
-    private final int valueId;
-    private final StringGraphState state;
-
-    public PropertyImpl(int nameId, int valueId, StringGraphState state) {
-        this.nameId = nameId;
-        this.valueId = valueId;
-        this.state = state;
+    public static StringGraphs getInstance() {
+        return INSTANCE;
+    }
+    
+    @Override
+    public StringGraphBuilder createStringGraphBuilder() {
+        return StringGraphBuilderImpl.createStringGraphBuilder();
     }
 
     @Override
-    public String getName() {
-        return state.getString(nameId);
+    public void writeStringGraph(StringGraph stringGraph, URI uri) {
+        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        store.writeStringGraph(stringGraph);
     }
 
     @Override
-    public String getValue() {
-        return state.getString(valueId);
+    public StringGraph readStringGraph(URI uri) {
+        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        return store.readStringGraph();
     }
 
     @Override
-    public String toString() {
-        return "PropertyImpl{" +
-                "name=" + quoted2(getName()) +
-                ", value=" + quoted2(getValue()) +
-                '}';
-    }
-
-    @Override
-    public int compareTo(Property o) {
-        return PROPERTY_COMPARATOR.compare(this, o);
+    public void constructStringGraph(URI uri, StringGraphConstructing constructing) {
+        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        store.constructStringGraph(constructing);
     }
 }

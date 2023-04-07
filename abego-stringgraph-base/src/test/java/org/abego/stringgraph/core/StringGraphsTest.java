@@ -24,37 +24,47 @@
 
 package org.abego.stringgraph.core;
 
-import org.abego.stringgraph.store.StringGraphStore;
-import org.abego.stringgraph.store.StringGraphStores;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.net.URI;
 
+import static org.abego.stringgraph.core.StringGraphTest.assertEqualToSample1;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StringGraphsTest {
-    @Test
-    void constructor() {
-        assertThrows(UnsupportedOperationException.class, StringGraphs::new);
-    }
-
 
     @Test
     void createStringGraphBuilder() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
+        StringGraphBuilder builder = StringGraphs.getInstance().createStringGraphBuilder();
 
         assertNotNull(builder);
     }
 
     @Test
-    void getStringGraphStore(@TempDir File tempDir) {
+    void writeReadConstructStringGraph(@TempDir File tempDir) {
+        StringGraph graph = StringGraphTest.getSample1();
         File file = new File(tempDir, "sample.graph");
+        URI uri = file.toURI();
 
-        StringGraphStore store = StringGraphStores.getStringGraphStore(file.toURI());
+        assertEqualToSample1(graph);
+        // writeStringGraph
+        StringGraphs.getInstance().writeStringGraph(graph, uri);
 
-        assertNotNull(store);
+        // readStringGraph
+        StringGraph readGraph = StringGraphs.getInstance().readStringGraph(uri);
+
+        assertEqualToSample1(readGraph);
+
+        // constructStringGraph
+        StringGraphBuilder builder = StringGraphs.getInstance()
+                .createStringGraphBuilder();
+
+        StringGraphs.getInstance().constructStringGraph(uri, builder);
+        
+        StringGraph constructedGraph = builder.build();
+        assertEqualToSample1(constructedGraph);
     }
 
 }

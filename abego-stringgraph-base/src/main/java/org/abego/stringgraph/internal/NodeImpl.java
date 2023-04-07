@@ -36,7 +36,7 @@ class NodeImpl implements Node {
 
     static NodeImpl asNodeImpl(Node node) {
         if (!(node instanceof NodeImpl)) {
-            throw new IllegalArgumentException("MyNode expected, got " + node.getClass());
+            throw new IllegalArgumentException("NodeImpl expected, got " + node.getClass());
         }
         return (NodeImpl) node;
     }
@@ -72,8 +72,8 @@ class NodeImpl implements Node {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NodeImpl myNode = (NodeImpl) o;
-        return id == myNode.id;
+        NodeImpl other = (NodeImpl) o;
+        return id == other.id;
     }
 
     @Override
@@ -83,7 +83,7 @@ class NodeImpl implements Node {
 
     @Override
     public String toString() {
-        return "MyNode{" + "id=" + quoted2(id()) + "}";
+        return "NodeImpl{" + "id=" + quoted2(id()) + "}";
     }
 
     int idAsInt() {

@@ -38,7 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * String the method {@link #getStringId(String)} returns its {@code int} value/
  * id.
  */
-public interface StringGraphState {
+interface StringGraphState {
     /**
      * Returns the (numeric) ids of all nodes. 
      */
@@ -108,10 +108,11 @@ public interface StringGraphState {
 
         int edgesCount = getEdgesCount();
         for (int i = 0; i < edgesCount; i++) {
+            int edgeId = i*3;
             graphConstructing.addEdge(
-                    getString(getFromId(i)),
-                    getString(getLabelId(i)),
-                    getString(getToId(i))
+                    getString(getFromId(edgeId)),
+                    getString(getLabelId(edgeId)),
+                    getString(getToId(edgeId))
             );
         }
 

@@ -32,7 +32,7 @@ import org.abego.stringgraph.core.Nodes;
 import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.Property;
 import org.abego.stringgraph.core.StringGraph;
-import org.abego.stringgraph.core.StringGraphException;
+import org.abego.stringgraph.core.exception.StringGraphException;
 import org.abego.stringgraph.internal.commons.StringUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 import static org.abego.stringgraph.internal.EmptyEdges.EMPTY_EDGES;
 import static org.abego.stringgraph.internal.EmptyNodes.EMPTY_NODES;
 
-public class StringGraphImpl implements StringGraph {
+class StringGraphImpl implements StringGraph {
 
     private enum PatternKind {
         QUERY,
@@ -395,7 +395,7 @@ public class StringGraphImpl implements StringGraph {
 
         int[] nodesIDs = nodes.stream().mapToInt(e -> {
             if (!(e instanceof NodeImpl)) {
-                throw new IllegalArgumentException("MyNode expected, got " + e.getClass());
+                throw new IllegalArgumentException("NodeImpl expected, got " + e.getClass());
             }
             return ((NodeImpl) e).idAsInt();
         }).toArray();

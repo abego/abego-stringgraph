@@ -39,7 +39,7 @@ class NodesImpl implements Nodes {
 
     static NodesImpl asNodesImpl(Nodes nodes) {
         if (!(nodes instanceof NodesImpl)) {
-            throw new IllegalArgumentException("MyNodes expected, got " + nodes.getClass());
+            throw new IllegalArgumentException("NodesImpl expected, got " + nodes.getClass());
         }
         return (NodesImpl) nodes;
     }

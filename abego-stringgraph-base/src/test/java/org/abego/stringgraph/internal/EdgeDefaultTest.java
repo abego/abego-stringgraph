@@ -112,7 +112,7 @@ public class EdgeDefaultTest {
     void testToString() {
         Edge edge = getEdgeSample();
 
-        assertEquals("MyEdge{fromNode=\"f\", label=\"lbl\", toNode=\"t\"}", edge.toString());
+        assertEquals("EdgeImpl{fromNode=\"f\", label=\"lbl\", toNode=\"t\"}", edge.toString());
     }
 
 }

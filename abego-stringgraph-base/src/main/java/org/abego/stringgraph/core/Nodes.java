@@ -1,5 +1,7 @@
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.core.exception.ExactlyOneNodeExpectedException;
+
 import java.util.stream.Stream;
 
 public interface Nodes extends Iterable<Node> {
@@ -8,6 +10,12 @@ public interface Nodes extends Iterable<Node> {
      * Returns the number of Node instances contained in this {@link Nodes} object.
      */
     int getSize();
+
+    /**
+     * Returns a stream of the Node instances contained in this {@link Nodes}
+     * object.
+     */
+    Stream<Node> stream();
 
     /**
      * Returns true when this {@link Nodes} object contains exactly on 
@@ -38,12 +46,6 @@ public interface Nodes extends Iterable<Node> {
         return singleNode().id();
     }
 
-    /**
-     * Returns a stream of the Node instances contained in this {@link Nodes}
-     * object.
-     */
-    Stream<Node> stream();
-    
     /**
      * Returns a stream of the id's of the Node instances contained in this 
      * {@link Nodes} object.

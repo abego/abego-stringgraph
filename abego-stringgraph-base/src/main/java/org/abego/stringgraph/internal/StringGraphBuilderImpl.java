@@ -26,7 +26,7 @@ package org.abego.stringgraph.internal;
 
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphBuilder;
-import org.abego.stringgraph.core.StringGraphException;
+import org.abego.stringgraph.core.exception.StringGraphException;
 import org.abego.stringpool.StringPool;
 import org.abego.stringpool.StringPoolBuilder;
 import org.abego.stringpool.StringPools;
@@ -41,8 +41,7 @@ import java.util.Set;
 
 import static org.abego.stringgraph.internal.commons.ArrayUtil.toIntArray;
 
-
-public final class StringGraphBuilderImpl implements StringGraphBuilder {
+final class StringGraphBuilderImpl implements StringGraphBuilder {
     private static class EdgeData {
         final int fromId;
         final int toId;

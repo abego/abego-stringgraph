@@ -24,8 +24,9 @@
 
 package org.abego.stringgraph.core;
 
+import org.abego.stringgraph.core.exception.ExactlyOneNodeExpectedException;
+import org.abego.stringgraph.core.exception.StringGraphException;
 import org.abego.stringgraph.internal.IterableUtil;
-import org.abego.stringgraph.internal.StringGraphBuilderImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,18 +44,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StringGraphTest {
     private static final StringGraph SAMPLE1 =
-            constructSample1(StringGraphBuilderImpl.createStringGraphBuilder())
+            constructSample1(StringGraphs.getInstance().createStringGraphBuilder())
                     .build();
 
     static Stream<StringGraph> stringGraphSample1Provider() {
-        return stringGraphBuilderProvider()
-                .map(b -> constructSample1(b).build());
+        return Stream.of(SAMPLE1);
     }
-
-    static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
-        return StringGraphBuilderTest.stringGraphBuilderProvider();
-    }
-
+    
     public static void assertNodesAsLinesEquals(
             String expectedStringsInLines, Iterable<Node> nodes) {
         assertEquals(expectedStringsInLines,
@@ -84,7 +80,7 @@ public class StringGraphTest {
     }
 
     public static StringGraph getSingleEdgeGraph() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
+        StringGraphBuilder builder = StringGraphs.getInstance().createStringGraphBuilder();
         builder.addEdge("from", "label", "to");
         return builder.build();
     }
@@ -223,7 +219,7 @@ public class StringGraphTest {
      * </pre>
      */
     private static StringGraph getSampleABCDEF() {
-        StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
+        StringGraphBuilder builder = StringGraphs.getInstance().createStringGraphBuilder();
         builder.addEdge("A", "e1", "B");
         builder.addEdge("A", "e2", "D");
         builder.addEdge("C", "e3", "B");
@@ -543,9 +539,11 @@ public class StringGraphTest {
                 sample1.edgesFromNode("x"));
     }
 
-    @ParameterizedTest
-    @MethodSource("stringGraphBuilderProvider")
-    void equalsAndHashcode(StringGraphBuilder builder) {
+    @Test
+    void equalsAndHashcode() {
+        StringGraphBuilder builder =
+                StringGraphs.getInstance().createStringGraphBuilder();
+        
         StringGraph sample1 = constructSample1(builder).build();
         StringGraph otherSample1 = constructSample1(builder).build();
         int h1 = sample1.hashCode();
@@ -570,9 +568,11 @@ public class StringGraphTest {
         assertTrue(s.startsWith("StringGraph"));
     }
 
-    @ParameterizedTest
-    @MethodSource("stringGraphBuilderProvider")
-    void duplicateEdges(StringGraphBuilder builder) {
+    @Test
+    void duplicateEdges() {
+        StringGraphBuilder builder =
+                StringGraphs.getInstance().createStringGraphBuilder();
+        
         builder.addEdge("a", "c", "b");
         builder.addEdge("d", "f", "e");
         // adding an edge that already exists will not change the graph
@@ -584,9 +584,10 @@ public class StringGraphTest {
                 "d --f--> e", graph.edges());
     }
 
-    @ParameterizedTest
-    @MethodSource("stringGraphBuilderProvider")
-    void props(StringGraphBuilder builder) {
+    @Test
+    void props() {
+        StringGraphBuilder builder =
+                StringGraphs.getInstance().createStringGraphBuilder();
         builder.addEdge("a", "c", "b");
 
         builder.setNodeProperty("a", "prop1", "foo");
@@ -654,7 +655,7 @@ public class StringGraphTest {
         // Property
 
         // ... toString
-        assertEquals("MyProperty{name=\"prop1\", value=\"foo\"}", prop1OfA.toString());
+        assertEquals("PropertyImpl{name=\"prop1\", value=\"foo\"}", prop1OfA.toString());
 
         // ... equals/hashCode
         assertNotEquals(prop1OfA, prop2OfA);
@@ -758,7 +759,7 @@ public class StringGraphTest {
         assertEquals("Exactly one Node expected, got: 2", e.getMessage());
         
         Node n = oneNode.singleNode();
-        assertEquals("MyNode{id=\"A\"}",n.toString());
+        assertEquals("NodeImpl{id=\"A\"}",n.toString());
     }
 
     @Test

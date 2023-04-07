@@ -43,7 +43,7 @@ class EdgeImpl implements Edge {
 
     static EdgeImpl asEdgeImpl(Edge edge) {
         if (!(edge instanceof EdgeImpl)) {
-            throw new IllegalArgumentException("MyEdge expected, got " + edge.getClass());
+            throw new IllegalArgumentException("EdgeImpl expected, got " + edge.getClass());
         }
         return (EdgeImpl) edge;
     }
@@ -80,7 +80,7 @@ class EdgeImpl implements Edge {
     @Override
     public String toString() {
         //noinspection HardCodedStringLiteral,StringConcatenation,MagicCharacter
-        return "MyEdge{" +
+        return "EdgeImpl{" +
                 "fromNode=" + quoted2(getFromNode().id()) +
                 ", label=" + quoted2(getLabel()) +
                 ", toNode=" + quoted2(getToNode().id()) +
@@ -91,8 +91,8 @@ class EdgeImpl implements Edge {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EdgeImpl myEdge = (EdgeImpl) o;
-        return id == myEdge.id;
+        EdgeImpl other = (EdgeImpl) o;
+        return id == other.id;
     }
 
     @Override
