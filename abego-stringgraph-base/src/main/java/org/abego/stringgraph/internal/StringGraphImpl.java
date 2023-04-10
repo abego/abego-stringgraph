@@ -400,7 +400,7 @@ class StringGraphImpl implements StringGraph {
         return new NodesImpl(nodesIDs, state);
     }
 
-    private boolean hasNode(String id) {
+    public boolean hasNode(String id) {
         int stringId = state.getStringIdOrZero(id);
         return stringId != 0 && nodeIds.contains(stringId);
     }

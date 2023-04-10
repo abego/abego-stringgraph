@@ -32,6 +32,8 @@ public interface StringGraph {
 
     //region Nodes
 
+    boolean hasNode(String node);
+    
     /**
      * Returns all {@link Nodes} of this {@link StringGraph}
      */
