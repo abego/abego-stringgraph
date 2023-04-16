@@ -8,8 +8,12 @@ import java.util.stream.Stream;
 public interface Properties extends Iterable<Property> {
 
     int getSize();
-    
+
     Stream<Property> stream();
+
+    default Stream<String> propertyNames() {
+        return stream().map(Property::getName);
+    }
 
     /**
      * Returns {@code true} when this object has a {@link Property} with the

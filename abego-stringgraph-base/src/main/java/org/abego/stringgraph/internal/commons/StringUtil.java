@@ -189,4 +189,19 @@ public final class StringUtil {
 
 
     //endregion
+    
+    //region
+    /**
+     * Same as {@link String#compareToIgnoreCase(String)}, but if the strings
+     * are equal when ignoring the case they are compared again case sensitively
+     * to ensure a stable order between the two strings.
+     *
+     * <p>This method does not take locale into account, and may result in an
+     * unsatisfactory ordering for certain locales.</p>
+     */
+    public static int compareToIgnoreCaseStable(String s1, String s2) {
+        return ObjectUtil.compareAsTexts(s1, s2);
+    }
+
+    //endregion
 }

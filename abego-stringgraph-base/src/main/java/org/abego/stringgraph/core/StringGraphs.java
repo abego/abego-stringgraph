@@ -27,6 +27,7 @@ package org.abego.stringgraph.core;
 import org.abego.stringgraph.internal.StringGraphsImpl;
 
 import java.net.URI;
+import java.util.Map;
 
 public interface StringGraphs {
 
@@ -40,24 +41,28 @@ public interface StringGraphs {
      * Writes the {@code stringGraph} to the give {@code uri}.
      */
     void writeStringGraph(StringGraph stringGraph, URI uri);
-    
+
     /**
      * Reads the {@code stringGraph} from the give {@code uri} and returns it.
      */
     StringGraph readStringGraph(URI uri);
 
     /**
-     * Reads ({@link StringGraph}-defining) data from the given {@code uri} and 
-     * calls the corresponding methods of the {@link StringGraphConstructing} 
+     * Reads ({@link StringGraph}-defining) data from the given {@code uri} and
+     * calls the corresponding methods of the {@link StringGraphConstructing}
      * object to construct a {@link StringGraph}.
      * <p>
      * The same StringGraphConstructing object may be used with different
      * URIs, e.g. to create a "merged" StringGraph.
-     * 
-     * @param uri The {@link URI} to read from, formerly used with a
-     *   {@link #writeStringGraph(StringGraph, URI)} call to write a StringGraph
-     * @param constructing a {@link StringGraphConstructing} instance used to 
+     *
+     * @param uri          The {@link URI} to read from, formerly used with a
+     *                     {@link #writeStringGraph(StringGraph, URI)} call to write a StringGraph
+     * @param constructing a {@link StringGraphConstructing} instance used to
      *                     construct a StringGraph from the data read from the {@code uri}
      */
     void constructStringGraph(URI uri, StringGraphConstructing constructing);
+
+    StringGraphDump createStringGraphDump(StringGraph graph, Map<String, String> translation);
+
+    StringGraphDump createStringGraphDump(StringGraph graph);
 }

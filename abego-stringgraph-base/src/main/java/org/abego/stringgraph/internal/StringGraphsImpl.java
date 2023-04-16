@@ -27,9 +27,11 @@ package org.abego.stringgraph.internal;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphBuilder;
 import org.abego.stringgraph.core.StringGraphConstructing;
+import org.abego.stringgraph.core.StringGraphDump;
 import org.abego.stringgraph.core.StringGraphs;
 
 import java.net.URI;
+import java.util.Map;
 
 public class StringGraphsImpl implements StringGraphs {
     private static final StringGraphs INSTANCE = new StringGraphsImpl();
@@ -59,5 +61,15 @@ public class StringGraphsImpl implements StringGraphs {
     public void constructStringGraph(URI uri, StringGraphConstructing constructing) {
         StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
         store.constructStringGraph(constructing);
+    }
+
+    @Override
+    public StringGraphDump createStringGraphDump(StringGraph graph, Map<String, String> translation) {
+        return StringGraphDumpImpl.createStringGraphDump(graph, translation);
+    }
+
+    @Override
+    public StringGraphDump createStringGraphDump(StringGraph graph) {
+        return StringGraphDumpImpl.createStringGraphDump(graph);
     }
 }

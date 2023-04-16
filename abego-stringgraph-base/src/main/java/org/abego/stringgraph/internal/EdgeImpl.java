@@ -32,6 +32,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import static org.abego.stringgraph.internal.commons.ClassUtil.className;
 import static org.abego.stringgraph.internal.commons.EdgeUtil.calcEdgeText;
 import static org.abego.stringgraph.internal.commons.StringUtil.quoted2;
+import static org.abego.stringgraph.internal.commons.StringUtil.quotedIfNeeded;
 
 class EdgeImpl implements Edge {
     private final int id;
@@ -57,6 +58,11 @@ class EdgeImpl implements Edge {
     @Override
     public String getLabel() {
         return state.getString(getLabelId());
+    }
+
+    @Override
+    public String getLabelText() {
+        return quotedIfNeeded(getLabel());
     }
 
     private int getLabelId() {

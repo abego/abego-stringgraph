@@ -114,5 +114,23 @@ public class EdgeDefaultTest {
 
         assertEquals("EdgeImpl{fromNode=\"f\", label=\"lbl\", toNode=\"t\"}", edge.toString());
     }
+    
+    @Test
+    void getLabelText() {
+        StringGraphBuilder builder = StringGraphBuilderImpl.createStringGraphBuilder();
+        builder.addEdge("a", "label", "b");
+        builder.addEdge("d", "l a b e l", "d");
+        builder.addEdge("f", "l\tb\nl", "t");
+        builder.addEdge("x", "z(abc)", "y");
+        builder.addEdge("y", "z(\"hello\")", "y");
+        Edge[] edges = builder.build().edges().stream().sorted()
+                .toArray(Edge[]::new);
+
+        assertEquals("label",edges[0].getLabelText());
+        assertEquals("\"l a b e l\"",edges[1].getLabelText());
+        assertEquals("\"l\\tb\\nl\"",edges[2].getLabelText());
+        assertEquals("z(abc)",edges[3].getLabelText());
+        assertEquals("\"z(\\\"hello\\\")\"",edges[4].getLabelText());
+    }
 
 }

@@ -43,14 +43,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 class StringGraphStoreDefault implements StringGraphStore {
     //region FieldsState
     private final URI uri;
     //endregion
-    
+
     //region Factories
     private StringGraphStoreDefault(URI uri) {
         this.uri = uri;
@@ -81,7 +84,7 @@ class StringGraphStoreDefault implements StringGraphStore {
     @Override
     public void constructStringGraph(StringGraphConstructing graphConstructing) {
         StringGraphState state = readStringGraphState();
-        state.constructGraph(graphConstructing);        
+        state.constructGraph(graphConstructing);
     }
 
     @Override
@@ -252,10 +255,24 @@ class StringGraphStoreDefault implements StringGraphStore {
             }
         }
 
+        private boolean writeSortedNodes() {
+            return true;
+        }
+
+        private List<Node> nodesSortedById(Nodes nodes) {
+            return nodes.stream().parallel()
+                    .sorted(Comparator.comparing(Node::id))
+                    .collect(Collectors.toList());
+        }
+
         private void writeNodesBlock() {
             Nodes allNodes = stringGraph.nodes();
             writeInt(allNodes.getSize());
-            for (Node s : allNodes) {
+
+            Iterable<Node> nodesToWrite =
+                    writeSortedNodes() ? nodesSortedById(allNodes) : allNodes;
+
+            for (Node s : nodesToWrite) {
                 writeString(s.id());
             }
         }
