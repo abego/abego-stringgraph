@@ -31,7 +31,9 @@ import org.abego.stringgraph.core.StringGraphDump;
 import org.abego.stringgraph.core.StringGraphs;
 
 import java.net.URI;
-import java.util.Map;
+import java.util.function.Function;
+
+import static org.abego.stringgraph.internal.StringGraphStoreDefault.createStringGraphStoreDefault;
 
 public class StringGraphsImpl implements StringGraphs {
     private static final StringGraphs INSTANCE = new StringGraphsImpl();
@@ -47,25 +49,26 @@ public class StringGraphsImpl implements StringGraphs {
 
     @Override
     public void writeStringGraph(StringGraph stringGraph, URI uri) {
-        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        StringGraphStoreDefault store = createStringGraphStoreDefault(uri);
         store.writeStringGraph(stringGraph);
     }
 
     @Override
     public StringGraph readStringGraph(URI uri) {
-        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        StringGraphStoreDefault store = createStringGraphStoreDefault(uri);
         return store.readStringGraph();
     }
 
     @Override
     public void constructStringGraph(URI uri, StringGraphConstructing constructing) {
-        StringGraphStoreDefault store = StringGraphStoreDefault.createStringGraphStoreDefault(uri);
+        StringGraphStoreDefault store = createStringGraphStoreDefault(uri);
         store.constructStringGraph(constructing);
     }
 
     @Override
-    public StringGraphDump createStringGraphDump(StringGraph graph, Map<String, String> translation) {
-        return StringGraphDumpImpl.createStringGraphDump(graph, translation);
+    public StringGraphDump createStringGraphDump(
+            StringGraph graph, Function<String, String> idOrLabelToText) {
+        return StringGraphDumpImpl.createStringGraphDump(graph, idOrLabelToText);
     }
 
     @Override

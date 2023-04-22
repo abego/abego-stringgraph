@@ -32,30 +32,27 @@ import org.abego.stringgraph.core.Properties;
 import org.abego.stringgraph.core.StringGraph;
 import org.abego.stringgraph.core.StringGraphDump;
 import org.abego.stringgraph.internal.commons.StringUtil;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.PrintWriter;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StringGraphDumpImpl implements StringGraphDump {
     private final StringGraph graph;
-    private final Map<String, String> translation;
+    private final Function<String, String> idToText;
 
-    private StringGraphDumpImpl(StringGraph graph, Map<String, String> translation) {
+    private StringGraphDumpImpl(StringGraph graph, Function<String, String> idToText) {
         this.graph = graph;
-        this.translation = translation;
+        this.idToText = idToText;
     }
 
-    public static StringGraphDump createStringGraphDump(StringGraph graph, Map<String, String> translation) {
-        return new StringGraphDumpImpl(graph, translation);
+    public static StringGraphDump createStringGraphDump(StringGraph graph, Function<String, String> idToText) {
+        return new StringGraphDumpImpl(graph, idToText);
     }
 
     public static StringGraphDump createStringGraphDump(StringGraph graph) {
-        //noinspection unchecked
-        return new StringGraphDumpImpl(graph, Collections.EMPTY_MAP);
+        return new StringGraphDumpImpl(graph, Function.identity());
     }
 
     @Override
@@ -63,53 +60,51 @@ public class StringGraphDumpImpl implements StringGraphDump {
 
         Nodes nodes = graph.nodes();
         Comparator<Node> nodeComparator =
-                (a, b) -> StringUtil.compareToIgnoreCaseStable(text(a, translation), text(b, translation));
+                (a, b) -> StringUtil.compareToIgnoreCaseStable(text(a, idToText), text(b, idToText));
 
         nodes.stream().sorted(nodeComparator).forEach(fromNode -> {
             Edges edges = graph.edgesFromNode(fromNode.id());
             int edgeCount = edges.getSize();
-            String fromNodeText = text(fromNode, translation);
+            String fromNodeText = text(fromNode, idToText);
             if (edgeCount == 0) {
                 writer.println(fromNodeText + propertiesText(fromNode) + " .");
             } else if (edgeCount == 1) {
                 Edge edge = edges.iterator().next();
                 writer.println(fromNodeText + propertiesText(fromNode) +
-                        " " + labeltext(edge, translation) +
-                        " " + text(edge.getToNode(), translation) +
+                        " " + labeltext(edge, idToText) +
+                        " " + text(edge.getToNode(), idToText) +
                         " .");
             } else {
                 writer.println(fromNodeText + propertiesText(fromNode));
                 Comparator<Edge> edgeComparator =
                         (a, b) -> {
-                            String la = labeltext(a, translation);
-                            String lb = labeltext(b, translation);
+                            String la = labeltext(a, idToText);
+                            String lb = labeltext(b, idToText);
                             int r = StringUtil.compareToIgnoreCaseStable(la, lb);
                             return r != 0
                                     ? r
                                     : StringUtil.compareToIgnoreCaseStable(
-                                    text(a.getToNode(), translation), text(b.getToNode(), translation));
+                                    text(a.getToNode(), idToText), text(b.getToNode(), idToText));
                         };
                 int[] i = new int[]{0};
                 edges.stream().sorted(edgeComparator).forEach(edge -> {
                     i[0]++;
                     writer.println(
-                            "\t" + labeltext(edge, translation) +
-                                    " " + text(edge.getToNode(), translation) +
+                            "\t" + labeltext(edge, idToText) +
+                                    " " + text(edge.getToNode(), idToText) +
                                     (i[0] < edgeCount ? " ;" : " ."));
 
                 });
             }
         });
     }
-
-    private static String text(Node node, Map<String, String> idTranslation) {
-        @Nullable String result = idTranslation.get(node.id());
-        return result != null ? result : node.getText();
+    
+    private static String text(Node node, Function<String, String> idTranslation) {
+        return StringUtil.quotedIfNeeded(idTranslation.apply(node.id()));
     }
 
-    private static String labeltext(Edge edge, Map<String, String> translation) {
-        @Nullable String result = translation.get(edge.getLabel());
-        return result != null ? result : edge.getLabelText();
+    private static String labeltext(Edge edge, Function<String, String> labelToText) {
+        return StringUtil.quotedIfNeeded(labelToText.apply(edge.getLabel()));
     }
 
     private String propertiesText(Node node) {

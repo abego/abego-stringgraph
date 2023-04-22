@@ -27,7 +27,7 @@ package org.abego.stringgraph.core;
 import org.abego.stringgraph.internal.StringGraphsImpl;
 
 import java.net.URI;
-import java.util.Map;
+import java.util.function.Function;
 
 public interface StringGraphs {
 
@@ -62,7 +62,16 @@ public interface StringGraphs {
      */
     void constructStringGraph(URI uri, StringGraphConstructing constructing);
 
-    StringGraphDump createStringGraphDump(StringGraph graph, Map<String, String> translation);
+    /**
+     * Creates a {@link StringGraphDump} for the given {@code graph}, using the
+     * {@code idOrLabelToText} function to translate the ids of {@link Node}s 
+     * and labels of {@link Edge}s before dumping.
+     */
+    StringGraphDump createStringGraphDump(
+            StringGraph graph, Function<String, String> idOrLabelToText);
 
+    /**
+     * Creates a {@link StringGraphDump} for the given {@code graph}.
+     */
     StringGraphDump createStringGraphDump(StringGraph graph);
 }
