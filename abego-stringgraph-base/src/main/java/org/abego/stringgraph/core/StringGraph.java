@@ -26,6 +26,7 @@ package org.abego.stringgraph.core;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public interface StringGraph {
@@ -33,7 +34,7 @@ public interface StringGraph {
     //region Nodes
 
     boolean hasNode(String node);
-    
+
     /**
      * Returns all {@link Nodes} of this {@link StringGraph}
      */
@@ -48,7 +49,7 @@ public interface StringGraph {
      *     <li>start with a {@code "?"} to indicate Nodes of this part are
      *     queried (should be returned when an edge is selected according
      *     to the query), or</li>
-     *     <li>be a String not starting with {@code "?"} in which case only 
+     *     <li>be a String not starting with {@code "?"} in which case only
      *     those edges are considered that have the given string
      *     as their value that part, or</li>
      *     <li>be {@code null} to allow any possible value for that part.</li>
@@ -75,6 +76,7 @@ public interface StringGraph {
     Nodes fromNodes();
 
     Nodes toNodes();
+
     Nodes nodesFromNode(String fromNode);
 
     default Nodes nodesFrom(Node node) {
@@ -99,7 +101,7 @@ public interface StringGraph {
         return nodesViaEdgeLabeledToNode(edgeLabel, node.id());
     }
     //endregion
-    
+
     //region Edges
     Edges edges();
 
@@ -154,14 +156,15 @@ public interface StringGraph {
     default EdgeLabels edgeLabelsFrom(Node node) {
         return edgeLabelsFromNode(node.id());
     }
+
     EdgeLabels edgeLabelsToNode(String toNode);
 
     default EdgeLabels edgeLabelsTo(Node node) {
         return edgeLabelsToNode(node.id());
     }
-    
+
     //endregion
-    
+
     //region Properties
     Properties getNodeProperties(String node);
 
@@ -187,6 +190,12 @@ public interface StringGraph {
         return getNodePropertyValue(node.id(), propertyName);
     }
 
+    default boolean getBooleanNodePropertyValue(
+            String node, String propertyName) {
+        return hasNodeProperty(node, propertyName) &&
+                Boolean.parseBoolean(getNodePropertyValue(node, propertyName));
+    }
+
     String getNodePropertyValueOrElse(
             String node, String propertyName, String defaultValue);
 
@@ -194,5 +203,15 @@ public interface StringGraph {
             Node node, String propertyName, String defaultValue) {
         return getNodePropertyValueOrElse(node.id(), propertyName, defaultValue);
     }
+
+    default Optional<String> getOptionalNodePropertyValue(
+            String node, String propertyName) {
+        if (hasNodeProperty(node, propertyName)) {
+            return Optional.of(getNodePropertyValue(node, propertyName));
+        } else {
+            return Optional.empty();
+        }
+    }
+
     //endregion
 }

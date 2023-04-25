@@ -33,6 +33,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -230,6 +231,8 @@ public class StringGraphTest {
         builder.addEdge("C", "e3", "B");
         builder.addEdge("C", "e2", "D");
         builder.addEdge("E", "e1", "F");
+        builder.setNodeProperty("E","x", "true");
+        builder.setNodeProperty("F","y", "false");
         return builder.build();
     }
 
@@ -851,6 +854,29 @@ public class StringGraphTest {
         //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(n1, "no Node");
         assertNotEquals(n1, n2);
+    }
+
+    @Test
+    void getBooleanNodePropertyValue() {
+        StringGraph graph = getSampleABCDEF();
+
+        assertTrue(graph.getBooleanNodePropertyValue("E", "x"));
+        assertFalse(graph.getBooleanNodePropertyValue("F", "y"));
+        // missing properties evaluate to a "false"
+        assertFalse(graph.getBooleanNodePropertyValue("F", "z"));
+    }
+
+    @Test
+    void getOptionalNodePropertyValue() {
+        StringGraph graph = getSampleABCDEF();
+
+        Optional<String> value = graph.getOptionalNodePropertyValue("E", "x");
+        assertTrue(value.isPresent());
+        assertEquals("true", value.get());
+
+        // missing value
+        value = graph.getOptionalNodePropertyValue("F", "z");
+        assertFalse(value.isPresent());
     }
 
     private static String asCommaSeparatedText(Stream<String> isStream) {
