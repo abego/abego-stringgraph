@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.3.0
+
+- extended API
+  - add StringGraph.hasNode
+  - add StringGraph.getBooleanNodePropertyValue/getOptionalNodePropertyValue
+  - add StringGraphDump/StringGraphs.createStringGraphDump
+
 ## 0.2.0
 
 (Includes breaking changes)
