@@ -61,4 +61,14 @@ public interface Nodes extends Iterable<Node> {
      * This object and the otherNodes are not modified.
      */
     Nodes intersected(Nodes otherNodes);
+
+    /**
+     * Returns a Nodes object with the union of this Nodes object and
+     * the otherNodes object, i.e. with all Node instances that are either in
+     * this Nodes object or in the otherNodes or in both.
+     * <p>
+     * This object and the otherNodes are not modified.
+     */
+    Nodes union(Nodes otherNodes);
+
 }

@@ -231,8 +231,8 @@ public class StringGraphTest {
         builder.addEdge("C", "e3", "B");
         builder.addEdge("C", "e2", "D");
         builder.addEdge("E", "e1", "F");
-        builder.setNodeProperty("E","x", "true");
-        builder.setNodeProperty("F","y", "false");
+        builder.setNodeProperty("E", "x", "true");
+        builder.setNodeProperty("F", "y", "false");
         return builder.build();
     }
 
@@ -779,6 +779,7 @@ public class StringGraphTest {
         assertEquals(0, noNodes.getSize());
         assertEquals(0, noNodes.stream().count());
         assertEquals(0, noNodes.intersected(twoNodes).getSize());
+        assertEquals(2, noNodes.union(twoNodes).getSize());
         assertNotNull(noNodes.iterator());
     }
 
@@ -839,6 +840,32 @@ public class StringGraphTest {
 
         nodes = oneNode.intersected(twoNodes);
         assertEquals("", asCommaSeparatedText(nodes.idStream()));
+    }
+
+    @Test
+    void unioned() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes allNodes = graph.nodes();
+        Nodes oneNode = graph.nodes("?", "e1", "B");
+        Nodes twoNodes = graph.nodes("A", null, "?");
+
+        Nodes nodes = allNodes.union(allNodes);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.union(oneNode);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.union(twoNodes);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = twoNodes.union(allNodes);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = twoNodes.union(oneNode);
+        assertEquals("A,B,D", asCommaSeparatedText(nodes.idStream()));
+        
+        nodes = oneNode.union(twoNodes);
+        assertEquals("A,B,D", asCommaSeparatedText(nodes.idStream()));
     }
 
     @Test

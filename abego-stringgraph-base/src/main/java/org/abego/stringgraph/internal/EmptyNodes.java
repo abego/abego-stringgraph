@@ -51,6 +51,11 @@ class EmptyNodes implements Nodes {
     }
 
     @Override
+    public Nodes union(Nodes otherNodes) {
+        return otherNodes;
+    }
+
+    @Override
     public Iterator<Node> iterator() {
         return emptyIterator();
     }

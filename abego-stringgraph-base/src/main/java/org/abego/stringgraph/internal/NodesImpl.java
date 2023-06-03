@@ -103,6 +103,54 @@ class NodesImpl implements Nodes {
         return new NodesImpl(Arrays.copyOf(buffer, iBuffer), state);
     }
 
+    @Override
+    public Nodes union(Nodes otherNodes) {
+        if (otherNodes == this || otherNodes.getSize() == 0) {
+            return this;
+        }
+
+        if (getSize() == 0) {
+            return otherNodes;
+        }
+        
+        // sort both id arrays
+        int[] a = sortedIds();
+        int[] b = asNodesImpl(otherNodes).sortedIds();
+        // compare the items of both id arrays and add all ids that are
+        // in either array to the buffer array, but avoid duplicate insertion
+        int nA = a.length;
+        int nB = b.length;
+        int maxResultSize = nA+ nB;
+        int[] buffer = new int[maxResultSize];
+        int iBuffer = 0;
+        int iA = 0;
+        int iB = 0;
+        while (iA < nA && iB < nB) {
+            int vA = a[iA];
+            int vB = b[iB];
+            if (vA == vB) {
+                buffer[iBuffer++] = vA;
+                iA++;
+                iB++;
+            } else if (vA > vB) {
+                buffer[iBuffer++] = vB;
+                iB++;
+            } else {
+                // vB > vA
+                buffer[iBuffer++] = vA;
+                iA++;
+            }
+        }
+        while (iA < nA) {
+            buffer[iBuffer++] = a[iA++];
+        }
+        while (iB < nB) {
+            buffer[iBuffer++] = b[iB++];
+        }
+
+        return new NodesImpl(Arrays.copyOf(buffer, iBuffer), state);
+    }
+
     private int[] sortedIds() {
         if (!isSorted) {
             Arrays.sort(nodesIDs);
