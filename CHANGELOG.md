@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.4.0
+
+- extended API
+  - add Nodes.union
+
 ## 0.3.0
 
 - extended API
