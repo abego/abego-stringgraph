@@ -2,10 +2,11 @@ package org.abego.stringgraph.core;
 
 import org.abego.stringgraph.core.exception.ExactlyOneNodeExpectedException;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Nodes extends Iterable<Node> {
-    
+
     /**
      * Returns the number of Node instances contained in this {@link Nodes} object.
      */
@@ -18,7 +19,7 @@ public interface Nodes extends Iterable<Node> {
     Stream<Node> stream();
 
     /**
-     * Returns true when this {@link Nodes} object contains exactly on 
+     * Returns true when this {@link Nodes} object contains exactly on
      * {@link Node} instance, otherwise false.
      */
     default boolean hasSingleNode() {
@@ -27,7 +28,7 @@ public interface Nodes extends Iterable<Node> {
 
     /**
      * Returns the single Node object contained in this {@link Nodes} object or,
-     * throws an {@link ExactlyOneNodeExpectedException} when the Nodes object 
+     * throws an {@link ExactlyOneNodeExpectedException} when the Nodes object
      * contains no Node or more than one Node.
      */
     default Node singleNode() {
@@ -36,10 +37,10 @@ public interface Nodes extends Iterable<Node> {
         }
         return iterator().next();
     }
-    
+
     /**
-     * Returns the id of the single Node object contained in this {@link Nodes} 
-     * object or, throws an {@link ExactlyOneNodeExpectedException} when the 
+     * Returns the id of the single Node object contained in this {@link Nodes}
+     * object or, throws an {@link ExactlyOneNodeExpectedException} when the
      * Nodes object contains no Node or more than one Node.
      */
     default String singleNodeId() {
@@ -47,7 +48,7 @@ public interface Nodes extends Iterable<Node> {
     }
 
     /**
-     * Returns a stream of the id's of the Node instances contained in this 
+     * Returns a stream of the id's of the Node instances contained in this
      * {@link Nodes} object.
      */
     default Stream<String> idStream() {
@@ -71,4 +72,5 @@ public interface Nodes extends Iterable<Node> {
      */
     Nodes union(Nodes otherNodes);
 
+    Nodes filter(Predicate<Node> predicate);
 }

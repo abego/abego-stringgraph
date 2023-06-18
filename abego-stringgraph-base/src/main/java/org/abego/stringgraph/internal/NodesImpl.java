@@ -30,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.abego.stringgraph.internal.commons.ClassUtil.className;
@@ -148,6 +149,22 @@ class NodesImpl implements Nodes {
             buffer[iBuffer++] = b[iB++];
         }
 
+        return new NodesImpl(Arrays.copyOf(buffer, iBuffer), state);
+    }
+
+    @Override
+    public Nodes filter(Predicate<Node> predicate) {
+        int[] buffer = new int[getSize()];
+        int iBuffer = 0;
+        for (int id:nodesIDs) {
+            if (predicate.test(new NodeImpl(id, state))) {
+                buffer[iBuffer++]=id;
+            }
+        }
+        if (iBuffer == getSize()) {
+            // nothing was excluded
+            return this;
+        }
         return new NodesImpl(Arrays.copyOf(buffer, iBuffer), state);
     }
 

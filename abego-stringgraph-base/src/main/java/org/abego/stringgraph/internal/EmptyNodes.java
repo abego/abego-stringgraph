@@ -28,6 +28,7 @@ import org.abego.stringgraph.core.Node;
 import org.abego.stringgraph.core.Nodes;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyIterator;
@@ -53,6 +54,11 @@ class EmptyNodes implements Nodes {
     @Override
     public Nodes union(Nodes otherNodes) {
         return otherNodes;
+    }
+
+    @Override
+    public Nodes filter(Predicate<Node> predicate) {
+        return this;
     }
 
     @Override

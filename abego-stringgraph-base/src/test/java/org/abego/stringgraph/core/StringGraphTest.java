@@ -863,9 +863,27 @@ public class StringGraphTest {
 
         nodes = twoNodes.union(oneNode);
         assertEquals("A,B,D", asCommaSeparatedText(nodes.idStream()));
-        
+
         nodes = oneNode.union(twoNodes);
         assertEquals("A,B,D", asCommaSeparatedText(nodes.idStream()));
+    }
+    
+    @Test
+    void filter() {
+        StringGraph graph = getSampleABCDEF();
+        Nodes allNodes = graph.nodes();
+
+        Nodes nodes = allNodes.filter(n->n.getText().compareTo("C")<=0);
+        assertEquals("A,B,C", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.filter(n->true);
+        assertEquals("A,B,C,D,E,F", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.filter(n->false);
+        assertEquals("", asCommaSeparatedText(nodes.idStream()));
+
+        nodes = allNodes.filter(n->n.getText().equals("F"));
+        assertEquals("F", asCommaSeparatedText(nodes.idStream()));
     }
 
     @Test
