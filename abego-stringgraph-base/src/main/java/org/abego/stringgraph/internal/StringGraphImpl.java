@@ -247,7 +247,9 @@ class StringGraphImpl implements StringGraph {
 
     @Override
     public String getNodePropertyValueOrElse(String node, String propertyName, String defaultValue) {
-        return getNodeProperties(node).getValueOfPropertyOrElse(propertyName, defaultValue);
+        return hasNode(node) 
+                ? getNodeProperties(node).getValueOfPropertyOrElse(propertyName, defaultValue)
+                : defaultValue;
     }
 
     @Override

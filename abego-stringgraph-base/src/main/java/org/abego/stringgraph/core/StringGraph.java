@@ -196,9 +196,19 @@ public interface StringGraph {
                 Boolean.parseBoolean(getNodePropertyValue(node, propertyName));
     }
 
+    /**
+     * Return the value of the property {@code propertyName} of the given
+     * {@code node} or, {@code defaultValue} when the {@code node} does not 
+     * exist or does not have the requested property.
+     */
     String getNodePropertyValueOrElse(
             String node, String propertyName, String defaultValue);
 
+    /**
+     * Return the value of the property {@code propertyName} of the given
+     * {@code node} or, {@code defaultValue} when the {@code node} does not 
+     * exist or does not have the requested property.
+     */
     default String getPropertyValueOrElse(
             Node node, String propertyName, String defaultValue) {
         return getNodePropertyValueOrElse(node.id(), propertyName, defaultValue);
