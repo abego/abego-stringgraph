@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.5.0
+
+- extended API
+  - add Nodes.filter
+  - StringGraph.getNodePropertyValueOrElse also works for missing Nodes
+
 ## 0.4.0
 
 - extended API
