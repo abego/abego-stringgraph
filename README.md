@@ -4,7 +4,7 @@ A graph implementation using String objects to represent the nodes and the label
 
 ## Download
 
-__Download:__ https://github.com/abego/abego-stringgraph/releases/tag/v0.4.0
+__Download:__ https://github.com/abego/abego-stringgraph/releases/tag/v0.5.0
 
 __Maven:__
 
@@ -12,7 +12,7 @@ __Maven:__
 <dependency>
     <groupId>org.abego.stringgraph</groupId>
     <artifactId>abego-stringgraph</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
